@@ -150,10 +150,13 @@ const Hero = () => (
             <span className="text-xs tracking-wider uppercase text-[#162032]/70">Accompagnement psycho-corporel</span>
           </div>
 
-          <h1 className="font-serif text-[44px] sm:text-6xl lg:text-7xl xl:text-[88px] leading-[0.98] tracking-tight text-[#162032]">
-            Le temps juste,<br />
-            <span className="italic font-light text-[#3d5a80]">pour ce qui demande</span><br />
-            <span className="italic font-light">à advenir.</span>
+          <p className="font-serif text-6xl sm:text-7xl lg:text-8xl xl:text-9xl font-light leading-none tracking-tight text-[#162032] mb-6">
+            Atelier <span className="italic text-[#3d5a80]">Kairos</span>
+          </p>
+
+          <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl xl:text-[56px] leading-[1.05] tracking-tight text-[#162032]/85 font-light">
+            Le temps juste,{' '}
+            <span className="italic text-[#3d5a80]">pour ce qui demande à advenir.</span>
           </h1>
 
           <p className="mt-8 max-w-xl text-base md:text-lg text-[#162032]/70 leading-relaxed">
