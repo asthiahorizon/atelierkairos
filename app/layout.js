@@ -30,7 +30,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="fr" className={`${fraunces.variable} ${inter.variable}`}>
-      <body className="antialiased font-sans bg-[#faf6ef] text-[#1f1b16]">
+      <body className="antialiased font-sans bg-[#f4f7fb] text-[#162032]">
         {children}
         <Toaster position="bottom-right" richColors />
       </body>
