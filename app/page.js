@@ -20,10 +20,12 @@ const IMG = {
   method1: 'https://atelierkairos.ch/wp-content/uploads/2025/04/IMG_5140.jpg',
   bisse: 'https://atelierkairos.ch/wp-content/uploads/2025/04/bisse.png',
   equilibre: 'https://atelierkairos.ch/wp-content/uploads/2025/04/IMG_5256.jpg',
+  guillaume: 'https://atelierkairos.ch/wp-content/uploads/2025/11/ialo.jpeg',
 };
 
 const NAV = [
   { href: '#philosophie', label: 'Philosophie' },
+  { href: '#apropos', label: 'À propos' },
   { href: '#approche', label: 'Approche' },
   { href: '#methodes', label: 'Méthodes' },
   { href: '#indications', label: 'Pour qui ?' },
@@ -55,7 +57,7 @@ const METHODS = [
   },
   {
     name: 'Théorie polyvagale',
-    short: 'PV',
+    short: 'TPV',
     icon: Brain,
     text: "Cette théorie offre un cadre pour comprendre le fonctionnement du système nerveux autonome — comment il module nos états de sécurité, vigilance ou défense. Un repère pour identifier nos états nerveux, favoriser un retour à la sécurité intérieure et renforcer la capacité à s'ouvrir à la relation."
   },
@@ -93,7 +95,7 @@ const Navbar = () => {
             <a
               key={n.href}
               href={n.href}
-              className="px-4 py-2 text-sm text-[#162032]/75 hover:text-[#3d5a80] transition-colors"
+              className="px-3 py-2 text-sm text-[#162032]/75 hover:text-[#3d5a80] transition-colors"
             >
               {n.label}
             </a>
@@ -136,10 +138,9 @@ const Navbar = () => {
 
 const Hero = () => (
   <section id="top" className="relative pt-36 pb-20 md:pt-44 md:pb-32 overflow-hidden">
-    {/* Background tint */}
     <div className="absolute inset-0 bg-gradient-to-b from-[#dde7f1] via-[#f4f7fb] to-[#f4f7fb]" />
-    <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-[#7195c4]/10 rounded-full blur-3xl" />
-    <div className="absolute top-60 -left-40 w-[500px] h-[500px] bg-[#5a7ba8]/8 rounded-full blur-3xl" />
+    <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-[#7195c4]/15 rounded-full blur-3xl" />
+    <div className="absolute top-60 -left-40 w-[500px] h-[500px] bg-[#5a7ba8]/10 rounded-full blur-3xl" />
 
     <div className="container mx-auto px-6 relative">
       <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
@@ -175,7 +176,7 @@ const Hero = () => (
             </a>
           </div>
 
-          <div className="mt-14 flex items-center gap-8 text-xs uppercase tracking-widest text-[#162032]/50">
+          <div className="mt-14 flex items-center gap-6 sm:gap-8 text-xs uppercase tracking-widest text-[#162032]/50">
             <div>
               <p className="font-serif text-2xl text-[#162032] normal-case tracking-normal">SE</p>
               <p className="mt-1">Somatic<br />Experiencing</p>
@@ -187,7 +188,7 @@ const Hero = () => (
             </div>
             <div className="w-px h-12 bg-[#162032]/15 hidden sm:block" />
             <div className="hidden sm:block">
-              <p className="font-serif text-2xl text-[#162032] normal-case tracking-normal">PV</p>
+              <p className="font-serif text-2xl text-[#162032] normal-case tracking-normal">TPV</p>
               <p className="mt-1">Théorie<br />polyvagale</p>
             </div>
           </div>
@@ -195,7 +196,7 @@ const Hero = () => (
 
         <div className="lg:col-span-5 animate-fade-up opacity-0" style={{ animationDelay: '0.4s' }}>
           <div className="relative">
-            <div className="absolute -inset-3 rounded-[2.5rem] bg-[#3d5a80]/10 -z-10 rotate-2" />
+            <div className="absolute -inset-3 rounded-[2.5rem] bg-[#3d5a80]/12 -z-10 rotate-2" />
             <div className="overflow-hidden rounded-[2rem] shadow-2xl shadow-[#162032]/15">
               <img
                 src={IMG.hero}
@@ -218,9 +219,9 @@ const Hero = () => (
 
 const SectionLabel = ({ num, label }) => (
   <div className="flex items-center gap-3 mb-6">
-    <span className="font-serif text-[#3d5a80] text-sm">{num}</span>
-    <span className="w-8 h-px bg-[#162032]/30" />
-    <span className="text-xs uppercase tracking-[0.25em] text-[#162032]/60">{label}</span>
+    {num && <span className="font-serif text-[#3d5a80] text-sm">{num}</span>}
+    {num && <span className="w-8 h-px bg-[#162032]/30" />}
+    {label && <span className="text-xs uppercase tracking-[0.25em] text-[#162032]/60">{label}</span>}
   </div>
 );
 
@@ -281,9 +282,76 @@ const Philosophie = () => (
   </section>
 );
 
+const Apropos = () => (
+  <section id="apropos" className="py-24 md:py-36 bg-[#dde7f1] relative overflow-hidden">
+    <div className="absolute -top-24 right-1/4 w-[400px] h-[400px] bg-[#7195c4]/15 rounded-full blur-3xl pointer-events-none" />
+    <div className="container mx-auto px-6 relative">
+      <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+        <div className="lg:col-span-5 lg:sticky lg:top-32 lg:self-start">
+          <SectionLabel num="02" label="À propos" />
+          <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl leading-[1.02] tracking-tight">
+            Guillaume, <span className="italic font-light text-[#3d5a80]">le chemin vers ce qui soigne.</span>
+          </h2>
+          <div className="mt-10 relative">
+            <div className="absolute -inset-3 rounded-[2rem] bg-[#3d5a80]/15 -z-10 -rotate-2" />
+            <div className="overflow-hidden rounded-[1.75rem] shadow-xl shadow-[#162032]/15">
+              <img
+                src={IMG.guillaume}
+                alt="Guillaume — Atelier Kairos"
+                className="w-full h-[460px] md:h-[520px] object-cover"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="lg:col-span-7 space-y-6 text-[#162032]/80 leading-relaxed">
+          <p className="text-lg text-[#162032]/90">
+            Je m&apos;appelle <span className="text-[#162032] font-medium">Guillaume</span>. Depuis ma naissance, je vis avec une épilepsie congénitale, dont la première crise est survenue à seulement six mois.
+          </p>
+          <p>
+            Cette maladie, intense et imprévisible, m&apos;a très tôt confronté à des expériences extrêmes, où le corps se fige, la peur s&apos;installe profondément, et la vulnérabilité devient une réalité quotidienne. Ces moments m&apos;ont obligé à développer une relation intime avec ma propre force intérieure — une présence en soi qui dépasse la peur et la douleur.
+          </p>
+
+          <div className="my-10 bg-[#f4f7fb] rounded-3xl p-7 md:p-9 border border-[#162032]/8">
+            <p className="font-serif text-xl md:text-2xl italic text-[#162032] leading-snug">
+              « La spiritualité a toujours été un socle fondamental dans ma vie, une source d&apos;ancrage et de sens face aux épreuves. »
+            </p>
+          </div>
+
+          <p>
+            Au fil des années, j&apos;ai cherché, expérimenté, testé différentes approches, jusqu&apos;à comprendre ce qui fonctionne vraiment pour moi. Ce chemin m&apos;a permis d&apos;émerger d&apos;un traumatisme profond, transformé par la résilience.
+          </p>
+          <p>
+            Je me reconnais aussi dans le spectre de la neurodiversité, ce qui a demandé un travail considérable de gestion émotionnelle et de régulation, intimement lié à mon vécu avec l&apos;épilepsie. Cette double réalité m&apos;a poussé à explorer et à intégrer des pratiques corporelles et spirituelles qui m&apos;aident à retrouver un équilibre profond et durable.
+          </p>
+          <p>
+            Aujourd&apos;hui, la connexion avec soi-même — avec son corps, ses émotions et sa dimension spirituelle — est pour moi une nécessité vitale. Après des années d&apos;exploration, je suis désormais porteur d&apos;outils solides, éprouvés dans ma vie quotidienne, que je souhaite partager pour accompagner d&apos;autres personnes dans leur propre chemin de reconnexion, de transformation et de bien-être.
+          </p>
+
+          <div className="mt-10 grid sm:grid-cols-2 gap-4">
+            <div className="bg-[#f4f7fb] rounded-2xl p-6 border border-[#162032]/8">
+              <p className="text-xs uppercase tracking-widest text-[#162032]/50 mb-2">Formation académique</p>
+              <p className="font-serif text-xl text-[#162032] leading-snug">Bachelor HES en Business Analyse</p>
+              <p className="mt-2 text-sm text-[#162032]/65">Rigueur, structure et processus.</p>
+            </div>
+            <div className="bg-[#3d5a80] rounded-2xl p-6 text-[#f4f7fb]">
+              <p className="text-xs uppercase tracking-widest text-[#f4f7fb]/60 mb-2">Pratique somatique</p>
+              <p className="font-serif text-xl leading-snug">Approche psycho-corporelle</p>
+              <p className="mt-2 text-sm text-[#f4f7fb]/75">Écoute, sensibilité et présence.</p>
+            </div>
+          </div>
+
+          <p className="pt-4">
+            Mon accompagnement reflète cette double vision : <span className="text-[#162032] font-medium">à la fois ancrée et fluide, structurée et vivante, technique et sensible.</span> Je crois profondément que la rigueur extérieure et l&apos;écoute intérieure s&apos;allient pour créer un équilibre puissant.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
 const Approche = () => (
-  <section id="approche" className="py-24 md:py-36 bg-[#dde7f1] relative overflow-hidden">
-    <div className="absolute top-0 right-0 w-px h-32 bg-[#3d5a80]/20" />
+  <section id="approche" className="py-24 md:py-36 relative overflow-hidden">
     <div className="container mx-auto px-6">
       <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
         <div className="lg:col-span-5 order-2 lg:order-1">
@@ -296,7 +364,7 @@ const Approche = () => (
         </div>
 
         <div className="lg:col-span-7 order-1 lg:order-2">
-          <SectionLabel num="02" label="L'approche" />
+          <SectionLabel num="03" label="L'approche" />
           <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl leading-[1.02] tracking-tight">
             Une approche <span className="italic font-light text-[#3d5a80]">psycho-corporelle.</span>
           </h2>
@@ -314,7 +382,7 @@ const Approche = () => (
               { label: 'Physique', icon: HandHeart },
               { label: 'Spirituel', icon: Sparkles },
             ].map((d) => (
-              <div key={d.label} className="flex items-center gap-3 p-4 rounded-2xl bg-[#f4f7fb] border border-[#162032]/8 hover:border-[#3d5a80]/40 hover:bg-[#f4f7fb] transition-all">
+              <div key={d.label} className="flex items-center gap-3 p-4 rounded-2xl bg-[#f4f7fb] border border-[#162032]/8 hover:border-[#3d5a80]/40 transition-all">
                 <div className="w-9 h-9 rounded-full bg-[#3d5a80]/10 flex items-center justify-center">
                   <d.icon className="w-4 h-4 text-[#3d5a80]" strokeWidth={1.5} />
                 </div>
@@ -329,10 +397,10 @@ const Approche = () => (
 );
 
 const Methodes = () => (
-  <section id="methodes" className="py-24 md:py-36 relative">
+  <section id="methodes" className="py-24 md:py-36 bg-[#dde7f1] relative overflow-hidden">
     <div className="container mx-auto px-6">
       <div className="max-w-3xl mb-16">
-        <SectionLabel num="03" label="Les méthodes" />
+        <SectionLabel num="04" label="Les méthodes" />
         <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl leading-[1.02] tracking-tight">
           Méthodes <span className="italic font-light text-[#3d5a80]">pratiquées.</span>
         </h2>
@@ -342,7 +410,7 @@ const Methodes = () => (
       </div>
 
       <div className="grid md:grid-cols-3 gap-5 lg:gap-6">
-        {METHODS.map((m, i) => (
+        {METHODS.map((m) => (
           <article
             key={m.name}
             className="group relative bg-[#f4f7fb] border border-[#162032]/10 rounded-3xl p-8 hover:border-[#3d5a80]/40 hover:shadow-xl hover:shadow-[#162032]/5 hover:-translate-y-1 transition-all duration-500"
@@ -355,8 +423,7 @@ const Methodes = () => (
             </div>
             <h3 className="font-serif text-2xl md:text-[26px] text-[#162032] mb-4 leading-tight">{m.name}</h3>
             <p className="text-[#162032]/70 leading-relaxed text-[15px]">{m.text}</p>
-            <div className="mt-8 pt-6 border-t border-[#162032]/8 flex items-center justify-between">
-              <span className="text-xs uppercase tracking-widest text-[#162032]/50">Méthode {String(i + 1).padStart(2, '0')}</span>
+            <div className="mt-8 pt-6 border-t border-[#162032]/8 flex items-center justify-end">
               <ArrowUpRight className="w-4 h-4 text-[#162032]/40 group-hover:text-[#3d5a80] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
             </div>
           </article>
@@ -377,10 +444,10 @@ const Methodes = () => (
 );
 
 const Indications = () => (
-  <section id="indications" className="py-24 md:py-36 bg-[#dde7f1]">
+  <section id="indications" className="py-24 md:py-36">
     <div className="container mx-auto px-6">
       <div className="max-w-3xl mb-16">
-        <SectionLabel num="04" label="Pour qui ?" />
+        <SectionLabel num="05" label="Pour qui ?" />
         <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl leading-[1.02] tracking-tight">
           À qui s&apos;adresse <span className="italic font-light text-[#3d5a80]">cet accompagnement ?</span>
         </h2>
@@ -411,10 +478,9 @@ const Indications = () => (
 );
 
 const Tarifs = () => (
-  <section id="tarifs" className="py-24 md:py-36">
+  <section id="tarifs" className="py-24 md:py-36 bg-[#dde7f1]">
     <div className="container mx-auto px-6">
       <div className="max-w-3xl mx-auto text-center mb-16">
-        <SectionLabel num="05" label="Tarifs" />
         <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl leading-[1.02] tracking-tight">
           Une <span className="italic font-light text-[#3d5a80]">tarification</span><br />juste et accessible.
         </h2>
@@ -437,7 +503,7 @@ const Tarifs = () => (
         </div>
 
         <div className="relative overflow-hidden bg-[#162032] text-[#f4f7fb] p-10 md:p-12 rounded-3xl">
-          <div className="absolute -right-20 -top-20 w-64 h-64 rounded-full bg-[#3d5a80]/30 blur-3xl" />
+          <div className="absolute -right-20 -top-20 w-64 h-64 rounded-full bg-[#3d5a80]/40 blur-3xl" />
           <p className="text-xs uppercase tracking-widest text-[#f4f7fb]/50 mb-5 relative">Tarif solidaire</p>
           <div className="flex items-baseline gap-2 mb-2 relative">
             <span className="font-serif text-7xl md:text-8xl font-light tracking-tight">80</span>
@@ -459,7 +525,7 @@ const Tarifs = () => (
 );
 
 const Equilibre = () => (
-  <section className="py-24 md:py-36 bg-[#dde7f1]">
+  <section className="py-24 md:py-36">
     <div className="container mx-auto px-6">
       <div className="max-w-5xl mx-auto">
         <div className="relative overflow-hidden rounded-[2rem] shadow-2xl shadow-[#162032]/15">
@@ -516,7 +582,7 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-24 md:py-36">
+    <section id="contact" className="py-24 md:py-36 bg-[#dde7f1]">
       <div className="container mx-auto px-6">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-16">
           <div className="lg:col-span-5">
@@ -636,6 +702,7 @@ const App = () => {
       <Navbar />
       <Hero />
       <Philosophie />
+      <Apropos />
       <Approche />
       <Methodes />
       <Indications />
