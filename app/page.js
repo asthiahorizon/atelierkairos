@@ -15,12 +15,12 @@ import {
 const LOGO = 'https://atelierkairos.ch/wp-content/uploads/2025/06/logo_noir.png';
 
 const IMG = {
-  hero: 'https://atelierkairos.ch/wp-content/uploads/2025/04/IMG_5226.jpg',
-  bouquetin: 'https://atelierkairos.ch/wp-content/uploads/2025/04/bouquetin.jpg',
-  method1: 'https://atelierkairos.ch/wp-content/uploads/2025/04/IMG_5140.jpg',
-  bisse: 'https://atelierkairos.ch/wp-content/uploads/2025/04/bisse.png',
-  equilibre: 'https://atelierkairos.ch/wp-content/uploads/2025/04/IMG_5256.jpg',
-  guillaume: 'https://atelierkairos.ch/wp-content/uploads/2025/11/ialo.jpeg',
+  hero: 'https://images.unsplash.com/photo-1726730362776-7b44217dafcc?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600',
+  bouquetin: 'https://images.unsplash.com/photo-1612693617300-29810aed7009?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200',
+  method1: 'https://images.unsplash.com/photo-1669158424143-3be4e002b36d?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600',
+  bisse: 'https://images.unsplash.com/photo-1669291481687-026754880645?crop=entropy&cs=srgb&fm=jpg&q=85&w=800',
+  equilibre: 'https://images.unsplash.com/photo-1759997095170-78b96221964e?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600',
+  guillaume: 'https://images.unsplash.com/photo-1762224691127-56e7b1dce731?crop=entropy&cs=srgb&fm=jpg&q=85&w=1000',
 };
 
 const NAV = [
@@ -63,9 +63,14 @@ const METHODS = [
   },
 ];
 
-const Logo = ({ className = '' }) => (
-  <a href="#top" className={`inline-flex items-center ${className}`} aria-label="Atelier Kairos">
-    <img src={LOGO} alt="Atelier Kairos" className="h-10 md:h-12 w-auto object-contain" />
+const Logo = ({ className = '', dark = false }) => (
+  <a href="#top" className={`inline-flex items-baseline gap-1 ${className}`} aria-label="Atelier Kairos">
+    <span className={`font-serif text-2xl md:text-[26px] font-light tracking-tight ${dark ? 'text-[#f4f7fb]' : 'text-[#162032]'}`}>
+      Atelier
+    </span>
+    <span className={`font-serif text-2xl md:text-[26px] italic font-normal tracking-tight ${dark ? 'text-[#f4f7fb]' : 'text-[#3d5a80]'}`}>
+      Kairos
+    </span>
   </a>
 );
 
