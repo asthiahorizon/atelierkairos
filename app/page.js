@@ -20,7 +20,7 @@ const IMG = {
   method1: 'https://images.unsplash.com/photo-1669158424143-3be4e002b36d?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600',
   bisse: 'https://images.unsplash.com/photo-1669291481687-026754880645?crop=entropy&cs=srgb&fm=jpg&q=85&w=800',
   equilibre: 'https://images.unsplash.com/photo-1759997095170-78b96221964e?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600',
-  guillaume: 'https://images.unsplash.com/photo-1762224691127-56e7b1dce731?crop=entropy&cs=srgb&fm=jpg&q=85&w=1000',
+  guillaume: '/images/guillaume.jpeg',
 };
 
 const NAV = [
@@ -604,9 +604,9 @@ const Contact = () => {
 
             <div className="mt-12 space-y-5">
               {[
-                { icon: Mail, label: 'Email', value: 'contact@atelierkairos.ch', href: 'mailto:contact@atelierkairos.ch' },
-                { icon: Phone, label: 'Téléphone', value: 'Sur demande', href: '#contact' },
-                { icon: MapPin, label: 'Cabinet', value: 'Suisse romande', href: '#' },
+                { icon: Mail, label: 'Email', value: 'info@atelierkairos.ch', href: 'mailto:info@atelierkairos.ch' },
+                { icon: Phone, label: 'Téléphone', value: '+41 79 437 11 96', href: 'tel:+41794371196' },
+                { icon: MapPin, label: 'Cabinet', value: 'Espace Chèndâ — Av. du Général Guisan 19, 3960 Sierre', href: 'https://maps.google.com/?q=Av.+du+G%C3%A9n%C3%A9ral+Guisan+19,+3960+Sierre' },
               ].map((c) => (
                 <a key={c.label} href={c.href} className="flex items-start gap-4 group">
                   <div className="w-11 h-11 rounded-2xl bg-[#162032]/5 flex items-center justify-center shrink-0 group-hover:bg-[#3d5a80]/10 transition-colors">
@@ -691,8 +691,10 @@ const Footer = () => (
         <div className="md:col-span-4">
           <p className="uppercase tracking-widest text-xs text-[#f4f7fb]/45 mb-5">Contact</p>
           <ul className="space-y-2.5 text-sm">
-            <li><a href="mailto:contact@atelierkairos.ch" className="hover:text-[#f4f7fb]">contact@atelierkairos.ch</a></li>
-            <li>Suisse romande</li>
+            <li><a href="mailto:info@atelierkairos.ch" className="hover:text-[#f4f7fb]">info@atelierkairos.ch</a></li>
+            <li><a href="tel:+41794371196" className="hover:text-[#f4f7fb]">+41 79 437 11 96</a></li>
+            <li>Espace Chèndâ — Av. du Général Guisan 19</li>
+            <li>3960 Sierre, Suisse</li>
           </ul>
         </div>
       </div>
