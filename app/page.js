@@ -580,6 +580,16 @@ const Contact = () => {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Erreur');
+
+      // Google Ads — Conversion tracking (formulaire envoyé avec succès)
+      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+        window.gtag('event', 'conversion', {
+          send_to: 'AW-18155367954/vPzECOSQiKscEJLck9FD',
+          value: 1.0,
+          currency: 'CHF',
+        });
+      }
+
       toast.success(data.message || 'Message envoyé.');
       setForm({ name: '', email: '', phone: '', subject: '', message: '' });
     } catch (err) {
