@@ -34,6 +34,12 @@ export default function sitemap() {
       priority: 0.9,
     },
     {
+      url: `${BASE_URL}/#orientations`,
+      lastModified,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
+    {
       url: `${BASE_URL}/#indications`,
       lastModified,
       changeFrequency: 'monthly',

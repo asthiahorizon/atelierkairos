@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import {
   Heart, Sparkles, Wind, Compass, Leaf,
   Brain, HandHeart, ArrowRight, ArrowUpRight, Mail, Phone, MapPin,
-  Menu, X, ShieldCheck, Flower2
+  Menu, X, ShieldCheck, Flower2, Palette, BrainCircuit, Shield
 } from 'lucide-react';
 
 const LOGO = 'https://atelierkairos.ch/wp-content/uploads/2025/06/logo_noir.png';
@@ -28,6 +28,7 @@ const NAV = [
   { href: '#apropos', label: 'À propos' },
   { href: '#approche', label: 'Approche' },
   { href: '#methodes', label: 'Méthodes' },
+  { href: '#orientations', label: 'Orientations' },
   { href: '#indications', label: 'Pour qui ?' },
   { href: '#tarifs', label: 'Tarifs' },
   { href: '#contact', label: 'Contact' },
@@ -35,11 +36,60 @@ const NAV = [
 
 const INDICATIONS = [
   { icon: Wind, num: '01', title: 'Gestion du stress', text: "Apprendre à réguler son système nerveux et gérer le stress de manière saine. Apaiser les états d'anxiété chronique, les tensions corporelles et émotionnelles." },
-  { icon: Heart, num: '02', title: 'Guérison du traumatisme', text: 'Guérir les traumatismes corporels et émotionnels afin de recouvrer une vitalité pleine et sereine.' },
-  { icon: Flower2, num: '03', title: 'Libération des tensions', text: 'Se libérer des tensions physiques et émotionnelles pour retrouver un équilibre intérieur durable.' },
-  { icon: Sparkles, num: '04', title: 'Réalisation de Soi', text: 'Explorer son identité profonde pour mieux comprendre ses besoins, ses ressentis et ce qui nous anime.' },
-  { icon: Compass, num: '05', title: 'Accompagner les transitions', text: 'Soutien dans les phases de transition de vie : deuil, changement professionnel, séparation, nouveau cycle.' },
-  { icon: ShieldCheck, num: '06', title: 'Douleurs chroniques', text: 'Prévention et gestion des douleurs chroniques par la reconnexion corporelle et la libération des tensions.' },
+  { icon: Flower2, num: '02', title: 'Libération des tensions', text: 'Se libérer des tensions physiques et émotionnelles pour retrouver un équilibre intérieur durable.' },
+  { icon: Sparkles, num: '03', title: 'Réalisation de Soi', text: 'Explorer son identité profonde pour mieux comprendre ses besoins, ses ressentis et ce qui nous anime.' },
+  { icon: Compass, num: '04', title: 'Accompagner les transitions', text: 'Soutien dans les phases de transition de vie : deuil, changement professionnel, séparation, nouveau cycle.' },
+  { icon: ShieldCheck, num: '05', title: 'Douleurs chroniques', text: 'Prévention et gestion des douleurs chroniques par la reconnexion corporelle et la libération des tensions.' },
+];
+
+const ORIENTATIONS = [
+  {
+    icon: Shield,
+    num: '01',
+    title: 'Travail psycho-corporel autour du trauma',
+    lead: "Retrouver progressivement plus de sécurité intérieure, de stabilité et de capacité à habiter son corps.",
+    text: "Un espace pour explorer en douceur les traces corporelles et émotionnelles liées au stress, au trauma, aux états de survie ou de figement. L'approche s'appuie sur la régulation du système nerveux, l'écoute des sensations, la présence au corps et le respect du rythme de chacun. L'objectif n'est pas de revivre ce qui a été difficile, mais de tisser à nouveau un sentiment de sécurité — celui qui permet d'être pleinement présent.",
+    indications: [
+      'Stress chronique',
+      'Anxiété',
+      'Dissociation',
+      'Tensions corporelles',
+      'Épuisement',
+      'Hypervigilance',
+      'Sentiment d\u2019insécurité',
+    ],
+  },
+  {
+    icon: Palette,
+    num: '02',
+    title: 'Ateliers somato-créatifs : régulation et expression',
+    lead: 'À la croisée du corps, de la créativité et de la régulation émotionnelle.',
+    text: "À travers le mouvement doux, l'écriture, la voix, le dessin, la matière ou d'autres formes d'expression, ces espaces permettent de donner forme à ce qui se vit intérieurement — sans forcément devoir passer par l'analyse ou les mots. La créativité devient ici un support de régulation, d'exploration et de transformation.",
+    indications: [
+      'Besoin d\u2019expression',
+      'Blocages créatifs',
+      'Surcharge émotionnelle',
+      'Difficulté à mettre des mots',
+      'Reconnexion corps & imaginaire',
+    ],
+  },
+  {
+    icon: BrainCircuit,
+    num: '03',
+    title: 'Accompagnement de la neurodiversité',
+    lead: "Composer avec son fonctionnement de manière respectueuse et vivante — non pas le corriger.",
+    text: "Un espace pensé pour les personnes au fonctionnement sensible, intense, atypique ou neurodivergent. Il peut s'agir d'explorer son rapport au corps, au rythme, aux stimulations, aux émotions, à la fatigue, à la concentration ou à la relation aux autres. L'objectif est de mieux comprendre son propre fonctionnement, non pas pour le normaliser, mais pour apprendre à l'habiter pleinement.",
+    indications: [
+      'Hypersensibilité',
+      'TDAH',
+      'Haut potentiel (HPI)',
+      'Autisme',
+      'Surcharge sensorielle',
+      'Fatigue nerveuse',
+      'Sentiment d\u2019être « trop » ou « pas adapté »',
+    ],
+    personalNote: "Étant moi-même autiste, à haut potentiel et épileptique, ce thème occupe une place particulière dans mon accompagnement. Je sais ce que cela signifie d'habiter un système nerveux singulier, et combien il est précieux de rencontrer un espace qui ne cherche pas à nous formater.",
+  },
 ];
 
 const METHODS = [
@@ -451,11 +501,88 @@ const Methodes = () => (
   </section>
 );
 
+const Orientations = () => (
+  <section id="orientations" className="py-24 md:py-36 relative overflow-hidden">
+    <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-[#7195c4]/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="container mx-auto px-6 relative">
+      <div className="max-w-3xl mb-16">
+        <SectionLabel num="05" label="Les orientations" />
+        <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl leading-[1.02] tracking-tight">
+          Trois <span className="italic font-light text-[#3d5a80]">orientations</span> d&apos;accompagnement.
+        </h2>
+        <p className="mt-6 text-[#162032]/70 leading-relaxed text-lg">
+          Au-delà des méthodes, trois espaces de travail distincts, conçus pour répondre à des besoins spécifiques tout en s&apos;appuyant sur la même approche psycho-corporelle.
+        </p>
+      </div>
+
+      <div className="space-y-6 lg:space-y-8">
+        {ORIENTATIONS.map((o, i) => (
+          <article
+            key={o.title}
+            className="group bg-[#f4f7fb] border border-[#162032]/10 rounded-[2rem] overflow-hidden hover:border-[#3d5a80]/40 hover:shadow-xl hover:shadow-[#162032]/5 transition-all duration-500"
+          >
+            <div className="grid lg:grid-cols-12 gap-0">
+              <div className="lg:col-span-4 bg-[#dde7f1] p-8 md:p-10 lg:p-12 flex flex-col justify-between min-h-[280px] relative overflow-hidden">
+                <div className="absolute -bottom-12 -right-12 w-48 h-48 rounded-full bg-[#3d5a80]/10 group-hover:bg-[#3d5a80]/15 transition-colors" />
+                <div className="relative">
+                  <span className="font-serif text-7xl md:text-8xl text-[#3d5a80]/30 italic leading-none">{o.num}</span>
+                </div>
+                <div className="relative flex items-end justify-between">
+                  <div className="w-16 h-16 rounded-2xl bg-[#f4f7fb] flex items-center justify-center shadow-sm">
+                    <o.icon className="w-7 h-7 text-[#3d5a80]" strokeWidth={1.3} />
+                  </div>
+                  <ArrowUpRight className="w-5 h-5 text-[#162032]/30 group-hover:text-[#3d5a80] group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" />
+                </div>
+              </div>
+
+              <div className="lg:col-span-8 p-8 md:p-10 lg:p-12">
+                <h3 className="font-serif text-2xl md:text-3xl lg:text-[34px] text-[#162032] leading-tight tracking-tight">
+                  {o.title}
+                </h3>
+                <p className="mt-4 font-serif italic text-lg md:text-xl text-[#3d5a80] leading-snug">
+                  {o.lead}
+                </p>
+                <p className="mt-5 text-[#162032]/75 leading-relaxed">
+                  {o.text}
+                </p>
+
+                {o.personalNote && (
+                  <div className="mt-6 bg-[#162032] text-[#f4f7fb] rounded-2xl p-6 md:p-7 relative overflow-hidden">
+                    <div className="absolute -right-16 -top-16 w-40 h-40 rounded-full bg-[#3d5a80]/30 blur-2xl" />
+                    <p className="text-xs uppercase tracking-widest text-[#f4f7fb]/55 mb-3 relative">Note personnelle</p>
+                    <p className="font-serif italic text-base md:text-lg leading-snug relative">
+                      {o.personalNote}
+                    </p>
+                  </div>
+                )}
+
+                <div className="mt-7 pt-6 border-t border-[#162032]/8">
+                  <p className="text-xs uppercase tracking-widest text-[#162032]/50 mb-4">Indications possibles</p>
+                  <div className="flex flex-wrap gap-2">
+                    {o.indications.map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-xs md:text-sm px-3.5 py-1.5 rounded-full bg-[#162032]/5 text-[#162032]/80 border border-[#162032]/10 group-hover:border-[#3d5a80]/30 group-hover:bg-[#3d5a80]/8 transition-colors"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
 const Indications = () => (
   <section id="indications" className="py-24 md:py-36">
     <div className="container mx-auto px-6">
       <div className="max-w-3xl mb-16">
-        <SectionLabel num="05" label="Pour qui ?" />
+        <SectionLabel num="06" label="Pour qui ?" />
         <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl leading-[1.02] tracking-tight">
           À qui s&apos;adresse <span className="italic font-light text-[#3d5a80]">cet accompagnement ?</span>
         </h2>
@@ -545,7 +672,7 @@ const Equilibre = () => (
           <div className="absolute inset-0 bg-gradient-to-tr from-[#162032]/80 via-[#162032]/40 to-transparent" />
           <div className="absolute inset-0 p-8 md:p-16 flex flex-col justify-end text-[#f4f7fb]">
             <div className="max-w-2xl">
-              <SectionLabel num="06" label="Une posture" />
+              <SectionLabel num="07" label="Une posture" />
               <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.05] tracking-tight">
                 Un équilibre <span className="italic font-light">essentiel.</span>
               </h2>
@@ -604,7 +731,7 @@ const Contact = () => {
       <div className="container mx-auto px-6">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-16">
           <div className="lg:col-span-5">
-            <SectionLabel num="07" label="Prendre contact" />
+            <SectionLabel num="08" label="Prendre contact" />
             <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl leading-[1.02] tracking-tight">
               Réservons <span className="italic font-light text-[#3d5a80]">un temps ensemble.</span>
             </h2>
@@ -725,6 +852,7 @@ const App = () => {
       <Apropos />
       <Approche />
       <Methodes />
+      <Orientations />
       <Indications />
       <Tarifs />
       <Equilibre />
