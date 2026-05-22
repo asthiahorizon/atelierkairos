@@ -31,7 +31,7 @@ export const metadata = {
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
 };
 
-export const viewport = { themeColor: '#4338ca', width: 'device-width', initialScale: 1, maximumScale: 5 };
+export const viewport = { themeColor: '#4f46e5', width: 'device-width', initialScale: 1, maximumScale: 5 };
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -66,7 +66,7 @@ export default function RootLayout({ children }) {
         <meta name="geo.position" content="46.2917;7.5354" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
-      <body className="antialiased font-sans bg-[#f5f4f8] text-[#1e1b4b]">
+      <body className="antialiased font-sans bg-[#f5f4f8] text-[#3730a3]">
         <Script src="https://www.googletagmanager.com/gtag/js?id=AW-18155367954" strategy="afterInteractive" />
         <Script id="gtag-init" strategy="afterInteractive">
           {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-18155367954');`}

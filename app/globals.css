@@ -5,32 +5,32 @@
 @layer base {
   :root {
     --background: 240 25% 97%;
-    --foreground: 240 60% 12%;
+    --foreground: 240 60% 18%;
     --card: 0 0% 100%;
-    --card-foreground: 240 60% 12%;
+    --card-foreground: 240 60% 18%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 60% 12%;
-    --primary: 245 58% 51%;
+    --popover-foreground: 240 60% 18%;
+    --primary: 243 75% 59%;
     --primary-foreground: 240 25% 97%;
     --secondary: 240 20% 92%;
-    --secondary-foreground: 240 60% 18%;
+    --secondary-foreground: 240 60% 22%;
     --muted: 240 15% 94%;
     --muted-foreground: 240 12% 42%;
     --accent: 245 60% 75%;
-    --accent-foreground: 240 60% 12%;
+    --accent-foreground: 240 60% 18%;
     --destructive: 0 70% 50%;
     --destructive-foreground: 240 25% 97%;
     --border: 240 18% 86%;
     --input: 240 18% 86%;
-    --ring: 245 58% 51%;
+    --ring: 243 75% 59%;
     --radius: 1rem;
-    --chart-1: 245 58% 51%;
+    --chart-1: 243 75% 59%;
     --chart-2: 260 50% 60%;
     --chart-3: 230 50% 55%;
     --chart-4: 200 40% 55%;
     --chart-5: 280 30% 65%;
     --sidebar: 0 0% 100%;
-    --sidebar-foreground: 240 60% 12%;
+    --sidebar-foreground: 240 60% 18%;
   }
 }
 
@@ -43,32 +43,39 @@
 
 html { scroll-behavior: smooth; }
 
-/* GLASSMORPHISM */
+/* GLASSMORPHISM ++ */
 .glass {
-  background: rgba(255, 255, 255, 0.55);
-  -webkit-backdrop-filter: blur(20px) saturate(150%);
-  backdrop-filter: blur(20px) saturate(150%);
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  box-shadow: 0 8px 32px rgba(67, 56, 202, 0.08), inset 0 1px 0 rgba(255,255,255,0.7);
+  background: rgba(255, 255, 255, 0.45);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 12px 48px rgba(79, 70, 229, 0.10), 0 2px 8px rgba(79, 70, 229, 0.05), inset 0 1px 0 rgba(255,255,255,0.8);
+}
+.glass-strong {
+  background: rgba(255, 255, 255, 0.6);
+  -webkit-backdrop-filter: blur(36px) saturate(200%);
+  backdrop-filter: blur(36px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 16px 56px rgba(79, 70, 229, 0.12), inset 0 1px 0 rgba(255,255,255,0.9);
 }
 .glass-soft {
-  background: rgba(255, 255, 255, 0.4);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
-  backdrop-filter: blur(14px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.3);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
 .glass-dark {
-  background: rgba(30, 27, 75, 0.55);
-  -webkit-backdrop-filter: blur(20px) saturate(150%);
-  backdrop-filter: blur(20px) saturate(150%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 8px 32px rgba(30, 27, 75, 0.4);
+  background: rgba(55, 48, 163, 0.55);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 12px 48px rgba(49, 46, 129, 0.5), inset 0 1px 0 rgba(255,255,255,0.1);
 }
 .glass-indigo {
-  background: rgba(99, 102, 241, 0.08);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
-  backdrop-filter: blur(16px) saturate(140%);
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  background: rgba(99, 102, 241, 0.10);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(99, 102, 241, 0.25);
 }
 
 /* Animated background blobs */
@@ -76,19 +83,19 @@ html { scroll-behavior: smooth; }
   content: '';
   position: absolute;
   border-radius: 9999px;
-  filter: blur(80px);
+  filter: blur(90px);
   z-index: -1;
   pointer-events: none;
-  opacity: 0.55;
+  opacity: 0.6;
 }
 .bg-blobs::before {
-  width: 520px; height: 520px;
+  width: 580px; height: 580px;
   background: radial-gradient(circle, #818cf8 0%, transparent 70%);
-  top: -120px; right: -120px;
+  top: -140px; right: -120px;
   animation: floatA 18s ease-in-out infinite;
 }
 .bg-blobs::after {
-  width: 460px; height: 460px;
+  width: 520px; height: 520px;
   background: radial-gradient(circle, #a78bfa 0%, transparent 70%);
   bottom: -140px; left: -120px;
   animation: floatB 22s ease-in-out infinite;
@@ -102,10 +109,7 @@ html { scroll-behavior: smooth; }
   50% { transform: translate(50px, -30px) scale(1.1); }
 }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 .animate-fade-up { animation: fadeUp 1s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; }
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -114,8 +118,5 @@ html { scroll-behavior: smooth; }
 @keyframes slowZoom { from { transform: scale(1.05); } to { transform: scale(1); } }
 .animate-slow-zoom { animation: slowZoom 14s ease-out forwards; }
 
-@keyframes shimmer {
-  0%, 100% { opacity: 0.5; transform: scale(1); }
-  50% { opacity: 0.85; transform: scale(1.04); }
-}
+@keyframes shimmer { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 0.9; transform: scale(1.05); } }
 .animate-shimmer { animation: shimmer 8s ease-in-out infinite; }

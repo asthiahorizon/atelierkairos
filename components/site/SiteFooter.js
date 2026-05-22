@@ -15,8 +15,8 @@ const COLS = [
 
 export default function SiteFooter() {
   return (
-    <footer className="relative bg-[#1e1b4b] text-white/80 pt-20 pb-12 overflow-hidden">
-      <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full bg-[#4338ca]/40 blur-3xl animate-shimmer" />
+    <footer className="relative bg-[#3730a3] text-white/80 pt-20 pb-12 overflow-hidden">
+      <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full bg-[#4f46e5]/40 blur-3xl animate-shimmer" />
       <div className="absolute -bottom-32 -left-32 w-[400px] h-[400px] rounded-full bg-[#7c3aed]/30 blur-3xl" />
 
       <div className="container mx-auto px-6 relative">
