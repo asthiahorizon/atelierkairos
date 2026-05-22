@@ -8,6 +8,7 @@ import { Menu, X, ArrowUpRight, ChevronDown } from 'lucide-react';
 
 export const NAV_LINKS = [
   { href: '/', label: 'Accueil' },
+  { href: '/#apropos', label: 'À propos' },
   {
     label: 'Accompagnement',
     href: '/accompagnement',

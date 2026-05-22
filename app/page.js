@@ -167,6 +167,78 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* À PROPOS — Guillaume */}
+      <section id="apropos" className="py-24 md:py-32 relative">
+        <div className="container mx-auto px-6">
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+            {/* PORTRAIT */}
+            <div className="lg:col-span-5 lg:sticky lg:top-28">
+              <div className="relative">
+                <div className="overflow-hidden rounded-[2rem] border border-[#312e81]/10 shadow-[0_24px_60px_-20px_rgba(49,46,129,0.25)]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images/guillaume.jpeg" alt="Guillaume David — Atelier Kairos" className="w-full h-auto object-cover" />
+                </div>
+                <div className="mt-6 grid grid-cols-2 gap-3">
+                  <div className="surface rounded-2xl p-4">
+                    <p className="text-[10px] uppercase tracking-[0.22em] text-[#312e81]/55 mb-1">Formation</p>
+                    <p className="font-serif text-[15px] text-[#312e81] leading-tight">Bachelor HES en Business Analyse</p>
+                    <p className="text-[12px] text-[#312e81]/60 mt-1 italic">Rigueur, structure, processus.</p>
+                  </div>
+                  <div className="surface rounded-2xl p-4">
+                    <p className="text-[10px] uppercase tracking-[0.22em] text-[#312e81]/55 mb-1">Pratique somatique</p>
+                    <p className="font-serif text-[15px] text-[#312e81] leading-tight">Approche psycho-corporelle</p>
+                    <p className="text-[12px] text-[#312e81]/60 mt-1 italic">Écoute, sensibilité, présence.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* TEXTE */}
+            <div className="lg:col-span-7">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full tag-indigo mb-6">
+                <span className="text-[10px] tracking-[0.25em] uppercase text-[#312e81]">À propos</span>
+              </div>
+              <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.04] tracking-tight text-[#312e81]">
+                Guillaume, <span className="italic font-light text-[#4338ca]">le chemin vers ce qui soigne.</span>
+              </h2>
+
+              <div className="mt-8 space-y-5 text-[#312e81]/78 leading-relaxed text-[17px]">
+                <p>
+                  Je m&apos;appelle Guillaume. Depuis ma naissance, je vis avec une <span className="text-[#312e81] font-medium">épilepsie congénitale</span>, dont la première crise est survenue à seulement six mois.
+                </p>
+                <p>
+                  Cette maladie, intense et imprévisible, m&apos;a très tôt confronté à des expériences extrêmes, où le corps se fige, la peur s&apos;installe profondément, et la vulnérabilité devient une réalité quotidienne. Ces moments m&apos;ont obligé à développer une relation intime avec ma propre force intérieure — une présence en soi qui dépasse la peur et la douleur.
+                </p>
+              </div>
+
+              <blockquote className="mt-8 relative pl-6 border-l-2 border-[#4338ca]/40">
+                <p className="font-serif italic text-xl md:text-2xl text-[#4338ca] leading-snug">
+                  « La spiritualité a toujours été un socle fondamental dans ma vie, une source d&apos;ancrage et de sens face aux épreuves. »
+                </p>
+              </blockquote>
+
+              <div className="mt-8 space-y-5 text-[#312e81]/78 leading-relaxed text-[17px]">
+                <p>
+                  Au fil des années, j&apos;ai cherché, expérimenté, testé différentes approches, jusqu&apos;à comprendre ce qui fonctionne vraiment pour moi. Ce chemin m&apos;a permis d&apos;émerger d&apos;un traumatisme profond, <span className="text-[#312e81] font-medium">transformé par la résilience</span>.
+                </p>
+                <p>
+                  Je me reconnais aussi dans le spectre de la <span className="text-[#312e81] font-medium">neurodiversité</span>, ce qui a demandé un travail considérable de gestion émotionnelle et de régulation, intimement lié à mon vécu avec l&apos;épilepsie. Cette double réalité m&apos;a poussé à explorer et intégrer des pratiques corporelles et spirituelles qui m&apos;aident à retrouver un équilibre profond et durable.
+                </p>
+                <p>
+                  Aujourd&apos;hui, la connexion avec soi-même — avec son corps, ses émotions et sa dimension subtile — est pour moi une nécessité vitale. Après des années d&apos;exploration, je suis désormais porteur d&apos;outils solides, éprouvés dans ma vie quotidienne, que je souhaite partager pour accompagner d&apos;autres personnes dans leur propre chemin de reconnexion, de transformation et de bien-être.
+                </p>
+              </div>
+
+              <div className="mt-10 rounded-2xl surface-soft border border-[#312e81]/10 p-6">
+                <p className="text-[#312e81]/80 leading-relaxed italic">
+                  Mon accompagnement reflète cette double vision : à la fois <span className="not-italic text-[#312e81] font-medium">ancrée et fluide</span>, <span className="not-italic text-[#312e81] font-medium">structurée et vivante</span>, technique et sensible. Je crois profondément que la rigueur extérieure et l&apos;écoute intérieure s&apos;allient pour créer un équilibre puissant.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 5 CARDS */}
       <section className="py-20 md:py-28 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[#eef0fb] via-[#f5f4f8] to-[#f0e9ff] -z-10" />
