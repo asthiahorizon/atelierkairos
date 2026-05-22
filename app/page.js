@@ -30,7 +30,7 @@ export default function HomePage() {
             <div className="lg:col-span-7 animate-fade-up opacity-0" style={{ animationDelay: '0.15s' }}>
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-indigo mb-8">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#4338ca] animate-pulse" />
-                <span className="text-[11px] tracking-[0.25em] uppercase text-[#312e81]">Accompagnement psycho-corporel — Sierre</span>
+                <span className="text-[11px] tracking-[0.25em] uppercase text-[#312e81]">Accompagnement psycho-corporel</span>
               </div>
 
               <p className="font-serif text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-light leading-[0.95] tracking-tight text-[#312e81] mb-5">

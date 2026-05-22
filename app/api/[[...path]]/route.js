@@ -5,7 +5,25 @@ import nodemailer from 'nodemailer';
 
 const MONGO_URL = process.env.MONGO_URL;
 const DB_NAME = process.env.DB_NAME || 'atelier_kairos';
+const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || 'admin@atelierkairos.ch').toLowerCase();
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'kairos-admin';
+const EMERGENT_LLM_KEY = process.env.EMERGENT_LLM_KEY || '';
+
+// Token = base64(email:password). Simple stateless auth, fine for single-admin CMS.
+function makeToken(email, password) {
+  return Buffer.from(`${email}:${password}`).toString('base64');
+}
+function checkToken(token) {
+  if (!token) return false;
+  try {
+    const decoded = Buffer.from(token, 'base64').toString('utf-8');
+    const idx = decoded.indexOf(':');
+    if (idx < 0) return false;
+    const email = decoded.slice(0, idx).toLowerCase();
+    const password = decoded.slice(idx + 1);
+    return email === ADMIN_EMAIL && password === ADMIN_PASSWORD;
+  } catch { return false; }
+}
 
 const VALID_TYPES = ['programmes', 'ateliers', 'creations', 'articles'];
 
@@ -75,8 +93,11 @@ function corsHeaders() {
 }
 
 function checkAdmin(request) {
-  const pwd = request.headers.get('x-admin-password') || '';
-  return pwd === ADMIN_PASSWORD;
+  const token = request.headers.get('x-admin-token') || request.headers.get('x-admin-password') || '';
+  // Backward compatibility: also accept raw password as token
+  if (checkToken(token)) return true;
+  if (token === ADMIN_PASSWORD) return true;
+  return false;
 }
 
 export async function OPTIONS() { return new NextResponse(null, { status: 204, headers: corsHeaders() }); }
@@ -86,6 +107,23 @@ export async function GET(request, { params }) {
   try {
     if (path === '' || path === 'health') {
       return NextResponse.json({ status: 'ok' }, { headers: corsHeaders() });
+    }
+
+    // Public: GET /api/images/:id  -> serve image bytes
+    if (path.startsWith('images/')) {
+      const id = path.split('/')[1];
+      if (!id) return NextResponse.json({ error: 'Id requis' }, { status: 400, headers: corsHeaders() });
+      const db = await getDb();
+      const img = await db.collection('cms_images').findOne({ id });
+      if (!img || !img.dataUrl) return NextResponse.json({ error: 'Image introuvable' }, { status: 404, headers: corsHeaders() });
+      const m = /^data:([^;]+);base64,(.+)$/.exec(img.dataUrl);
+      if (!m) {
+        // If it's already a URL, redirect
+        return NextResponse.redirect(img.dataUrl, 302);
+      }
+      const mime = m[1]; const b64 = m[2];
+      const buf = Buffer.from(b64, 'base64');
+      return new NextResponse(buf, { status: 200, headers: { ...corsHeaders(), 'Content-Type': mime, 'Cache-Control': 'public, max-age=31536000, immutable' } });
     }
     // Public: GET /api/entries/:type
     if (path.startsWith('entries/')) {
@@ -152,8 +190,80 @@ export async function POST(request, { params }) {
     // Admin login: POST /api/admin/login
     if (path === 'admin/login') {
       const body = await request.json();
-      if (body?.password === ADMIN_PASSWORD) return NextResponse.json({ success: true, token: ADMIN_PASSWORD }, { headers: corsHeaders() });
-      return NextResponse.json({ error: 'Mot de passe incorrect' }, { status: 401, headers: corsHeaders() });
+      const email = String(body?.email || '').trim().toLowerCase();
+      const password = String(body?.password || '');
+      if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+        return NextResponse.json({ success: true, token: makeToken(email, password), email }, { headers: corsHeaders() });
+      }
+      return NextResponse.json({ error: 'Identifiants incorrects' }, { status: 401, headers: corsHeaders() });
+    }
+
+    // Image upload (base64): POST /api/admin/upload-image  { dataUrl: "data:image/...;base64,..." }
+    if (path === 'admin/upload-image') {
+      if (!checkAdmin(request)) return NextResponse.json({ error: 'Non autorisé' }, { status: 401, headers: corsHeaders() });
+      const body = await request.json();
+      const dataUrl = String(body?.dataUrl || '');
+      if (!dataUrl.startsWith('data:image/')) {
+        return NextResponse.json({ error: 'Image invalide (data URL attendu)' }, { status: 400, headers: corsHeaders() });
+      }
+      // Limit size (rough check) — store base64 raw in DB
+      if (dataUrl.length > 8_000_000) {
+        return NextResponse.json({ error: 'Image trop volumineuse (max ~6Mo)' }, { status: 400, headers: corsHeaders() });
+      }
+      const id = uuidv4();
+      const doc = { id, dataUrl, createdAt: new Date().toISOString() };
+      try {
+        const db = await getDb();
+        await db.collection('cms_images').insertOne(doc);
+      } catch (e) { console.error('Upload Mongo:', e.message); }
+      // Public URL to retrieve the image bytes
+      const url = `/api/images/${id}`;
+      return NextResponse.json({ success: true, id, url }, { headers: corsHeaders() });
+    }
+
+    // AI Image generation: POST /api/admin/generate-image  { prompt: "..." }
+    if (path === 'admin/generate-image') {
+      if (!checkAdmin(request)) return NextResponse.json({ error: 'Non autorisé' }, { status: 401, headers: corsHeaders() });
+      if (!EMERGENT_LLM_KEY) return NextResponse.json({ error: 'Clé LLM non configurée' }, { status: 500, headers: corsHeaders() });
+      const body = await request.json();
+      const prompt = String(body?.prompt || '').trim();
+      if (!prompt) return NextResponse.json({ error: 'Prompt requis' }, { status: 400, headers: corsHeaders() });
+
+      try {
+        // Call Emergent universal LLM gateway (OpenAI-compatible) for image generation — Gemini Nano Banana.
+        const resp = await fetch('https://integrations.emergentagent.com/llm/v1/images/generations', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${EMERGENT_LLM_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'gemini/gemini-2.5-flash-image',
+            prompt,
+            n: 1,
+            size: '1024x1024',
+          }),
+        });
+        const text = await resp.text();
+        let data; try { data = JSON.parse(text); } catch { data = { raw: text }; }
+        if (!resp.ok) {
+          console.error('Image gen error:', resp.status, text.slice(0, 400));
+          return NextResponse.json({ error: 'Erreur génération image', status: resp.status, details: data?.error || text.slice(0, 400) }, { status: 502, headers: corsHeaders() });
+        }
+        const first = data?.data?.[0] || {};
+        let dataUrl = first.url || '';
+        if (!dataUrl && first.b64_json) dataUrl = `data:image/png;base64,${first.b64_json}`;
+        if (!dataUrl) return NextResponse.json({ error: 'Réponse image vide', details: data }, { status: 502, headers: corsHeaders() });
+
+        // Persist
+        const id = uuidv4();
+        const doc = { id, dataUrl, prompt, source: 'ai', createdAt: new Date().toISOString() };
+        try { const db = await getDb(); await db.collection('cms_images').insertOne(doc); } catch (e) { console.error('AI img Mongo:', e.message); }
+        const url = dataUrl.startsWith('data:') ? `/api/images/${id}` : dataUrl;
+        return NextResponse.json({ success: true, id, url, dataUrl }, { headers: corsHeaders() });
+      } catch (err) {
+        return NextResponse.json({ error: err.message }, { status: 500, headers: corsHeaders() });
+      }
     }
 
     // Admin create: POST /api/admin/entries/:type

@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import { Mail, Phone, MapPin, ArrowRight } from 'lucide-react';
+import { Mail, Phone, ArrowRight } from 'lucide-react';
 
 export default function ContactPage() {
   const [form, setForm] = useState({ firstName: '', name: '', email: '', subject: '', message: '' });
@@ -52,7 +52,6 @@ export default function ContactPage() {
               {[
                 { icon: Mail, label: 'Email', value: 'info@atelierkairos.ch', href: 'mailto:info@atelierkairos.ch' },
                 { icon: Phone, label: 'Téléphone', value: '+41 79 437 11 96', href: 'tel:+41794371196' },
-                { icon: MapPin, label: 'Espace', value: 'Espace Chèndâ — Av. du Général Guisan 19, 3960 Sierre', href: 'https://maps.google.com/?q=Av.+du+G%C3%A9n%C3%A9ral+Guisan+19,+3960+Sierre' },
               ].map((c) => (
                 <a key={c.label} href={c.href} className="flex items-start gap-4 group">
                   <div className="w-11 h-11 rounded-2xl glass-indigo flex items-center justify-center shrink-0">

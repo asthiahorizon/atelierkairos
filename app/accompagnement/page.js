@@ -5,7 +5,7 @@ import { Leaf, HandHeart, Brain, Shield, BrainCircuit, ArrowUpRight, Wind, Flowe
 
 export const metadata = {
   title: 'Accompagnement psycho-corporel',
-  description: "Accompagnement individuel psycho-corporel à Sierre : régulation du système nerveux, travail autour du trauma et expression de l'Être. Somatic Experiencing, TCSB, théorie polyvagale.",
+  description: "Accompagnement individuel psycho-corporel : régulation du système nerveux, travail autour du trauma et expression de l'Être. Somatic Experiencing, TCSB, théorie polyvagale.",
 };
 
 const METHODS = [

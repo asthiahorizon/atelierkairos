@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 const COLS = [
   { title: 'Espaces', links: [
@@ -15,23 +16,21 @@ const COLS = [
 
 export default function SiteFooter() {
   return (
-    <footer className="relative bg-[#312e81] text-white/80 pt-20 pb-12 overflow-hidden">
-      <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full bg-[#4338ca]/40 blur-3xl animate-shimmer" />
-      <div className="absolute -bottom-32 -left-32 w-[400px] h-[400px] rounded-full bg-[#7c3aed]/30 blur-3xl" />
-
-      <div className="container mx-auto px-6 relative">
+    <footer className="bg-[#1e1b4b] text-white/80 pt-20 pb-10">
+      <div className="container mx-auto px-6">
         <div className="grid md:grid-cols-12 gap-10 md:gap-12 mb-14">
           <div className="md:col-span-5">
-            <div className="inline-flex items-baseline gap-1.5">
-              <span className="font-serif text-3xl font-light tracking-tight text-white">Atelier</span>
-              <span className="font-serif text-3xl italic font-normal tracking-tight text-[#a5b4fc]">Kairos</span>
-            </div>
+            <Link href="/" className="inline-flex items-center gap-2.5">
+              <span className="relative inline-block w-10 h-10 bg-white rounded-full overflow-hidden">
+                <Image src="/logo.png" alt="Atelier Kairos" fill sizes="40px" className="object-contain p-1" />
+              </span>
+              <span className="inline-flex items-baseline gap-1.5">
+                <span className="font-serif text-2xl font-light tracking-tight text-white">Atelier</span>
+                <span className="font-serif text-2xl italic font-normal tracking-tight text-[#a5b4fc]">Kairos</span>
+              </span>
+            </Link>
             <p className="mt-5 text-sm text-white/65 leading-relaxed max-w-sm">
               Le moment juste, pour ce qui demande à advenir. Un espace en dehors du tumulte, dédié à l&apos;écoute du vivant et à la transformation profonde.
-            </p>
-            <p className="mt-4 text-xs text-white/45 leading-relaxed">
-              Espace Chèndâ — Centre holistique de santé<br />
-              Av. du Général Guisan 19, 3960 Sierre
             </p>
           </div>
 
