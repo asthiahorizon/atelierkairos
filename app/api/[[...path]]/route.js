@@ -7,7 +7,43 @@ const MONGO_URL = process.env.MONGO_URL;
 const DB_NAME = process.env.DB_NAME || 'atelier_kairos';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'kairos-admin';
 
-const VALID_TYPES = ['formations', 'ateliers', 'creations', 'articles'];
+const VALID_TYPES = ['programmes', 'ateliers', 'creations', 'articles'];
+
+// Default seed content for first load (admin can edit/delete freely afterwards)
+const SEED_DATA = {
+  programmes: [
+    { title: 'Neurodivergence en entreprise', subtitle: 'Axe 01', description: "Comprendre les fonctionnements atypiques, adapter les environnements, valoriser les forces créatives et cognitives.", tags: ['neurodivergence', 'inclusion'], order: 1 },
+    { title: 'Créativité corporelle', subtitle: 'Axe 02', description: "Utiliser le corps, le mouvement et la présence comme portes d'accès à l'innovation et à l'intelligence collective.", tags: ['corps', 'créativité'], order: 2 },
+    { title: 'Régulation du système nerveux', subtitle: 'Axe 03', description: "Reconnaître les états de stress, surcharge, figement ou dispersion — et développer des ressources concrètes de régulation.", tags: ['régulation', 'stress'], order: 3 },
+    { title: "Ateliers d'équipe", subtitle: 'Axe 04', description: "Créer des espaces d'expérimentation, de respiration et de transformation collective.", tags: ['équipe', 'collectif'], order: 4 },
+    { title: 'Projets créatifs', subtitle: 'Axe 05', description: "Soutenir les équipes dans l'émergence, la clarification et la matérialisation d'idées nouvelles.", tags: ['projets', 'innovation'], order: 5 },
+  ],
+};
+
+async function ensureSeed(db, type) {
+  if (!SEED_DATA[type]) return;
+  const meta = await db.collection('cms_meta').findOne({ key: `seeded_${type}` });
+  if (meta) return;
+  const now = new Date().toISOString();
+  const docs = SEED_DATA[type].map((d) => ({
+    id: uuidv4(),
+    type,
+    title: d.title || '',
+    subtitle: d.subtitle || '',
+    description: d.description || '',
+    content: d.content || '',
+    imageUrl: d.imageUrl || '',
+    tags: d.tags || [],
+    published: true,
+    order: d.order || 0,
+    createdAt: now,
+    updatedAt: now,
+  }));
+  if (docs.length) {
+    try { await db.collection('cms_entries').insertMany(docs); } catch (e) { console.error('Seed:', e.message); }
+  }
+  try { await db.collection('cms_meta').insertOne({ key: `seeded_${type}`, at: now }); } catch (e) { /* ignore */ }
+}
 
 let cachedClient = null;
 async function getDb() {
@@ -58,6 +94,7 @@ export async function GET(request, { params }) {
         return NextResponse.json({ error: 'Type invalide' }, { status: 400, headers: corsHeaders() });
       }
       const db = await getDb();
+      await ensureSeed(db, type);
       const entries = await db.collection('cms_entries')
         .find({ type, published: true }, { projection: { _id: 0 } })
         .sort({ order: 1, createdAt: -1 })
@@ -70,6 +107,7 @@ export async function GET(request, { params }) {
       const type = path.split('/')[2];
       if (!VALID_TYPES.includes(type)) return NextResponse.json({ error: 'Type invalide' }, { status: 400, headers: corsHeaders() });
       const db = await getDb();
+      await ensureSeed(db, type);
       const entries = await db.collection('cms_entries').find({ type }, { projection: { _id: 0 } }).sort({ order: 1, createdAt: -1 }).toArray();
       return NextResponse.json({ entries }, { headers: corsHeaders() });
     }
@@ -89,7 +127,7 @@ async function sendContactEmail(doc) {
   const from = process.env.SMTP_FROM || process.env.SMTP_USER;
   const subjectLine = doc.subject ? `[Atelier Kairos] ${doc.subject}` : `[Atelier Kairos] Nouveau message de ${doc.name}`;
   const text = `Nouveau message via le site Atelier Kairos\n\nNom: ${doc.name}\nEmail: ${doc.email}\nTéléphone: ${doc.phone||'—'}\nSujet: ${doc.subject||'—'}\nDate: ${doc.createdAt}\n\nMessage:\n${doc.message}`;
-  const html = `<div style="font-family:system-ui,sans-serif;max-width:600px;margin:0 auto;color:#312e81"><div style="background:#3730a3;color:#f5f4f8;padding:24px 28px;border-radius:14px 14px 0 0"><p style="margin:0;font-size:12px;letter-spacing:.18em;text-transform:uppercase;opacity:.7">Atelier Kairos</p><h2 style="margin:8px 0 0;font-weight:400;font-size:22px">Nouveau message reçu</h2></div><div style="background:#f5f4f8;padding:28px;border-radius:0 0 14px 14px;border:1px solid #e0e0ef;border-top:0"><table style="width:100%;border-collapse:collapse;font-size:14px"><tr><td style="padding:6px 0;color:#56607a;width:120px">Nom</td><td style="padding:6px 0"><strong>${escapeHtml(doc.name)}</strong></td></tr><tr><td style="padding:6px 0;color:#56607a">Email</td><td style="padding:6px 0"><a href="mailto:${escapeHtml(doc.email)}" style="color:#4f46e5;text-decoration:none">${escapeHtml(doc.email)}</a></td></tr><tr><td style="padding:6px 0;color:#56607a">Téléphone</td><td style="padding:6px 0">${escapeHtml(doc.phone)||'—'}</td></tr><tr><td style="padding:6px 0;color:#56607a">Sujet</td><td style="padding:6px 0">${escapeHtml(doc.subject)||'—'}</td></tr></table><div style="margin-top:20px;padding:18px 20px;background:#fff;border-left:3px solid #4f46e5;border-radius:8px;white-space:pre-wrap;line-height:1.6">${escapeHtml(doc.message)}</div></div></div>`;
+  const html = `<div style="font-family:system-ui,sans-serif;max-width:600px;margin:0 auto;color:#312e81"><div style="background:#312e81;color:#f5f4f8;padding:24px 28px;border-radius:14px 14px 0 0"><p style="margin:0;font-size:12px;letter-spacing:.18em;text-transform:uppercase;opacity:.7">Atelier Kairos</p><h2 style="margin:8px 0 0;font-weight:400;font-size:22px">Nouveau message reçu</h2></div><div style="background:#f5f4f8;padding:28px;border-radius:0 0 14px 14px;border:1px solid #e0e0ef;border-top:0"><table style="width:100%;border-collapse:collapse;font-size:14px"><tr><td style="padding:6px 0;color:#56607a;width:120px">Nom</td><td style="padding:6px 0"><strong>${escapeHtml(doc.name)}</strong></td></tr><tr><td style="padding:6px 0;color:#56607a">Email</td><td style="padding:6px 0"><a href="mailto:${escapeHtml(doc.email)}" style="color:#4338ca;text-decoration:none">${escapeHtml(doc.email)}</a></td></tr><tr><td style="padding:6px 0;color:#56607a">Téléphone</td><td style="padding:6px 0">${escapeHtml(doc.phone)||'—'}</td></tr><tr><td style="padding:6px 0;color:#56607a">Sujet</td><td style="padding:6px 0">${escapeHtml(doc.subject)||'—'}</td></tr></table><div style="margin-top:20px;padding:18px 20px;background:#fff;border-left:3px solid #4338ca;border-radius:8px;white-space:pre-wrap;line-height:1.6">${escapeHtml(doc.message)}</div></div></div>`;
   await transporter.sendMail({ from: `"Atelier Kairos — Formulaire" <${from}>`, to, replyTo: doc.email, subject: subjectLine, text, html });
 }
 

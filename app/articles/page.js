@@ -15,7 +15,7 @@ export default function Page() {
       <PageHero kicker="Espace de transmission" title="Articles" italic="& réflexions." subtitle="Réflexions autour du corps, de la conscience, de la créativité, du système nerveux et de la neurodivergence." />
 
       <section className="py-12 md:py-20">
-        <div className="container mx-auto px-6 max-w-3xl text-[#3730a3]/75 leading-relaxed text-lg space-y-5">
+        <div className="container mx-auto px-6 max-w-3xl text-[#312e81]/75 leading-relaxed text-lg space-y-5">
           <p>Un espace de transmission, d&apos;exploration et de mise en mots — entre le corps, la conscience, la créativité, la neurodivergence et la régulation du système nerveux.</p>
         </div>
       </section>
@@ -30,20 +30,20 @@ export default function Page() {
                   {a.imageUrl && <div className="aspect-[16/10] overflow-hidden"><img src={a.imageUrl} alt={a.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" /></div>}
                   <div className="p-7">
                     <div className="flex items-center justify-between mb-4">
-                      {a.subtitle ? (<span className="text-[10px] uppercase tracking-[0.25em] text-[#4f46e5]">{a.subtitle}</span>) : <span />}
-                      <span className="text-[10px] uppercase tracking-[0.25em] text-[#3730a3]/40">{new Date(a.createdAt).toLocaleDateString('fr-CH', { year: 'numeric', month: 'short' })}</span>
+                      {a.subtitle ? (<span className="text-[10px] uppercase tracking-[0.25em] text-[#4338ca]">{a.subtitle}</span>) : <span />}
+                      <span className="text-[10px] uppercase tracking-[0.25em] text-[#312e81]/40">{new Date(a.createdAt).toLocaleDateString('fr-CH', { year: 'numeric', month: 'short' })}</span>
                     </div>
-                    <h3 className="font-serif text-xl md:text-2xl text-[#3730a3] leading-tight mb-3">{a.title}</h3>
-                    {a.description && <p className="text-[#3730a3]/70 leading-relaxed text-[14px]">{a.description}</p>}
-                    {a.tags?.length > 0 && <div className="mt-5 flex flex-wrap gap-1.5">{a.tags.map(t => <span key={t} className="text-[11px] px-2.5 py-1 rounded-full glass-indigo text-[#3730a3]">{t}</span>)}</div>}
+                    <h3 className="font-serif text-xl md:text-2xl text-[#312e81] leading-tight mb-3">{a.title}</h3>
+                    {a.description && <p className="text-[#312e81]/70 leading-relaxed text-[14px]">{a.description}</p>}
+                    {a.tags?.length > 0 && <div className="mt-5 flex flex-wrap gap-1.5">{a.tags.map(t => <span key={t} className="text-[11px] px-2.5 py-1 rounded-full glass-indigo text-[#312e81]">{t}</span>)}</div>}
                   </div>
                 </article>
               ))}
             </div>
           ) : (
             <div className="glass-strong rounded-3xl p-12 text-center max-w-2xl mx-auto">
-              <p className="font-serif italic text-2xl text-[#3730a3]/80 leading-snug">Les premiers articles seront publiés ici progressivement.</p>
-              <p className="mt-4 text-[#3730a3]/65">Revenez bientôt — ou écrivez-moi pour rester en lien.</p>
+              <p className="font-serif italic text-2xl text-[#312e81]/80 leading-snug">Les premiers articles seront publiés ici progressivement.</p>
+              <p className="mt-4 text-[#312e81]/65">Revenez bientôt — ou écrivez-moi pour rester en lien.</p>
             </div>
           )}
         </div>

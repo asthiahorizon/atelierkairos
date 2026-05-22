@@ -19,15 +19,15 @@ export default function Page() {
 
       <section className="py-12 md:py-20">
         <div className="container mx-auto px-6 grid lg:grid-cols-12 gap-12">
-          <div className="lg:col-span-7 space-y-5 text-[#3730a3]/75 leading-relaxed text-lg">
-            <p>Les ateliers et cercles proposés par l&apos;Atelier Kairos sont des <span className="text-[#3730a3] font-medium">espaces collectifs vivants</span> où chacun peut explorer le corps, la créativité, la conscience et l&apos;expression de l&apos;Être dans un cadre sécurisant et progressif.</p>
-            <p>Loin de la performance ou de la production à tout prix, ces espaces invitent à ralentir, à ressentir, à partager et à laisser émerger ce qui demande à advenir. Le collectif devient un terrain d&apos;expérimentation : <span className="italic text-[#4f46e5]">on s&apos;y rencontre soi-même en même temps que l&apos;on rencontre les autres.</span></p>
+          <div className="lg:col-span-7 space-y-5 text-[#312e81]/75 leading-relaxed text-lg">
+            <p>Les ateliers et cercles proposés par l&apos;Atelier Kairos sont des <span className="text-[#312e81] font-medium">espaces collectifs vivants</span> où chacun peut explorer le corps, la créativité, la conscience et l&apos;expression de l&apos;Être dans un cadre sécurisant et progressif.</p>
+            <p>Loin de la performance ou de la production à tout prix, ces espaces invitent à ralentir, à ressentir, à partager et à laisser émerger ce qui demande à advenir. Le collectif devient un terrain d&apos;expérimentation : <span className="italic text-[#4338ca]">on s&apos;y rencontre soi-même en même temps que l&apos;on rencontre les autres.</span></p>
             <p>Les formats varient — rencontres ponctuelles d&apos;une demi-journée, cycles thématiques sur plusieurs semaines, cercles réguliers mensuels. Tous restent ancrés dans la même intention : créer les conditions d&apos;une présence vivante à soi, au corps, et au groupe.</p>
           </div>
           <div className="lg:col-span-5">
             <div className="relative">
               <div className="absolute -inset-5 rounded-[2.75rem] bg-gradient-to-br from-[#818cf8]/50 to-[#a78bfa]/40 blur-2xl -z-10" />
-              <div className="overflow-hidden rounded-[2rem] shadow-xl shadow-[#3730a3]/20 ring-1 ring-white/50"><img src={IMG} alt="Ateliers et cercles" className="w-full h-[420px] object-cover" /></div>
+              <div className="overflow-hidden rounded-[2rem] shadow-xl shadow-[#312e81]/20 ring-1 ring-white/50"><img src={IMG} alt="Ateliers et cercles" className="w-full h-[420px] object-cover" /></div>
             </div>
           </div>
         </div>
@@ -43,18 +43,18 @@ export default function Page() {
                 <article key={a.id} className="group glass rounded-3xl overflow-hidden hover:glass-strong hover:-translate-y-1 transition-all duration-500">
                   {a.imageUrl && <div className="aspect-[16/10] overflow-hidden"><img src={a.imageUrl} alt={a.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" /></div>}
                   <div className="p-7">
-                    {a.subtitle && <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-[#4f46e5] mb-3"><Calendar className="w-3 h-3" />{a.subtitle}</div>}
-                    <h3 className="font-serif text-xl text-[#3730a3] leading-tight mb-3">{a.title}</h3>
-                    {a.description && <p className="text-[#3730a3]/70 leading-relaxed text-[14px]">{a.description}</p>}
-                    {a.tags?.length > 0 && <div className="mt-5 flex flex-wrap gap-1.5">{a.tags.map(t => <span key={t} className="text-[11px] px-2.5 py-1 rounded-full glass-indigo text-[#3730a3]">{t}</span>)}</div>}
+                    {a.subtitle && <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-[#4338ca] mb-3"><Calendar className="w-3 h-3" />{a.subtitle}</div>}
+                    <h3 className="font-serif text-xl text-[#312e81] leading-tight mb-3">{a.title}</h3>
+                    {a.description && <p className="text-[#312e81]/70 leading-relaxed text-[14px]">{a.description}</p>}
+                    {a.tags?.length > 0 && <div className="mt-5 flex flex-wrap gap-1.5">{a.tags.map(t => <span key={t} className="text-[11px] px-2.5 py-1 rounded-full glass-indigo text-[#312e81]">{t}</span>)}</div>}
                   </div>
                 </article>
               ))}
             </div>
           ) : (
             <div className="glass-strong rounded-3xl p-12 text-center max-w-2xl mx-auto">
-              <p className="font-serif italic text-2xl text-[#3730a3]/80 leading-snug">Le programme des ateliers et cercles sera publié ici progressivement.</p>
-              <p className="mt-4 text-[#3730a3]/65">Écrivez-moi pour être tenu au courant.</p>
+              <p className="font-serif italic text-2xl text-[#312e81]/80 leading-snug">Le programme des ateliers et cercles sera publié ici progressivement.</p>
+              <p className="mt-4 text-[#312e81]/65">Écrivez-moi pour être tenu au courant.</p>
             </div>
           )}
         </div>

@@ -33,7 +33,7 @@ export default function ContactPage() {
     } finally { setLoading(false); }
   };
 
-  const inputClass = "mt-2 bg-transparent border-0 border-b border-[#3730a3]/15 rounded-none focus-visible:ring-0 focus-visible:border-[#4f46e5] px-0 text-[#3730a3]";
+  const inputClass = "mt-2 bg-transparent border-0 border-b border-[#312e81]/15 rounded-none focus-visible:ring-0 focus-visible:border-[#4338ca] px-0 text-[#312e81]";
 
   return (
     <main className="min-h-screen bg-[#f5f4f8]">
@@ -43,9 +43,9 @@ export default function ContactPage() {
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-6 grid lg:grid-cols-12 gap-12 lg:gap-16">
           <div className="lg:col-span-5">
-            <div className="space-y-5 text-[#3730a3]/75 leading-relaxed text-lg">
+            <div className="space-y-5 text-[#312e81]/75 leading-relaxed text-lg">
               <p>Vous souhaitez explorer un accompagnement individuel, organiser un atelier, imaginer une intervention en entreprise ou simplement entrer en lien avec l&apos;Atelier Kairos&nbsp;?</p>
-              <p className="font-serif italic text-xl text-[#4f46e5]">L&apos;échange peut commencer simplement, à partir de là où vous en êtes.</p>
+              <p className="font-serif italic text-xl text-[#4338ca]">L&apos;échange peut commencer simplement, à partir de là où vous en êtes.</p>
             </div>
 
             <div className="mt-12 space-y-5">
@@ -56,11 +56,11 @@ export default function ContactPage() {
               ].map((c) => (
                 <a key={c.label} href={c.href} className="flex items-start gap-4 group">
                   <div className="w-11 h-11 rounded-2xl glass-indigo flex items-center justify-center shrink-0">
-                    <c.icon className="w-4 h-4 text-[#4f46e5]" strokeWidth={1.5} />
+                    <c.icon className="w-4 h-4 text-[#4338ca]" strokeWidth={1.5} />
                   </div>
                   <div>
-                    <p className="text-[10px] uppercase tracking-[0.25em] text-[#3730a3]/50 mb-1">{c.label}</p>
-                    <p className="text-[#3730a3] group-hover:text-[#4f46e5] transition-colors">{c.value}</p>
+                    <p className="text-[10px] uppercase tracking-[0.25em] text-[#312e81]/50 mb-1">{c.label}</p>
+                    <p className="text-[#312e81] group-hover:text-[#4338ca] transition-colors">{c.value}</p>
                   </div>
                 </a>
               ))}
@@ -72,31 +72,31 @@ export default function ContactPage() {
               <form onSubmit={onSubmit} className="space-y-5">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="firstName" className="text-[10px] uppercase tracking-[0.25em] text-[#3730a3]/60">Prénom *</Label>
+                    <Label htmlFor="firstName" className="text-[10px] uppercase tracking-[0.25em] text-[#312e81]/60">Prénom *</Label>
                     <Input id="firstName" name="firstName" value={form.firstName} onChange={onChange} required className={inputClass} />
                   </div>
                   <div>
-                    <Label htmlFor="name" className="text-[10px] uppercase tracking-[0.25em] text-[#3730a3]/60">Nom *</Label>
+                    <Label htmlFor="name" className="text-[10px] uppercase tracking-[0.25em] text-[#312e81]/60">Nom *</Label>
                     <Input id="name" name="name" value={form.name} onChange={onChange} required className={inputClass} />
                   </div>
                 </div>
                 <div>
-                  <Label htmlFor="email" className="text-[10px] uppercase tracking-[0.25em] text-[#3730a3]/60">Email *</Label>
+                  <Label htmlFor="email" className="text-[10px] uppercase tracking-[0.25em] text-[#312e81]/60">Email *</Label>
                   <Input id="email" name="email" type="email" value={form.email} onChange={onChange} required className={inputClass} />
                 </div>
                 <div>
-                  <Label htmlFor="subject" className="text-[10px] uppercase tracking-[0.25em] text-[#3730a3]/60">Sujet</Label>
+                  <Label htmlFor="subject" className="text-[10px] uppercase tracking-[0.25em] text-[#312e81]/60">Sujet</Label>
                   <Input id="subject" name="subject" value={form.subject} onChange={onChange} className={inputClass} />
                 </div>
                 <div>
-                  <Label htmlFor="message" className="text-[10px] uppercase tracking-[0.25em] text-[#3730a3]/60">Message *</Label>
+                  <Label htmlFor="message" className="text-[10px] uppercase tracking-[0.25em] text-[#312e81]/60">Message *</Label>
                   <Textarea id="message" name="message" value={form.message} onChange={onChange} required rows={6} className={`${inputClass} resize-none`} />
                 </div>
-                <Button type="submit" disabled={loading} className="w-full mt-6 bg-[#3730a3] hover:bg-[#4f46e5] text-white rounded-full py-6 text-sm transition-colors">
+                <Button type="submit" disabled={loading} className="w-full mt-6 bg-[#312e81] hover:bg-[#4338ca] text-white rounded-full py-6 text-sm transition-colors">
                   {loading ? 'Envoi…' : 'Envoyer le message'}
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
-                <p className="text-xs text-[#3730a3]/50 text-center">Vos données restent strictement confidentielles.</p>
+                <p className="text-xs text-[#312e81]/50 text-center">Vos données restent strictement confidentielles.</p>
               </form>
             </div>
           </div>

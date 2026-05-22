@@ -15,9 +15,9 @@ export default function Page() {
       <PageHero kicker="Univers créatif" title="Créations" italic="& explorations." subtitle="Un espace où mes explorations prennent forme à travers les textes, les objets, les images, les projets et les matières." />
 
       <section className="py-12 md:py-20">
-        <div className="container mx-auto px-6 grid lg:grid-cols-2 gap-10 lg:gap-16 text-[#3730a3]/75 leading-relaxed text-lg">
-          <p>La création est au cœur de l&apos;Atelier Kairos. Elle n&apos;est pas seulement une production extérieure, mais une <span className="text-[#3730a3] font-medium">manière d&apos;entrer en relation</span> avec le vivant, avec la conscience, avec la matière et avec l&apos;être.</p>
-          <p>Cet espace présente mes créations personnelles — envisagées comme un <span className="italic text-[#4f46e5]">chemin d&apos;incarnation</span>. Une manière de rendre visible l&apos;invisible, de donner forme à ce qui traverse le corps, la conscience et l&apos;imaginaire.</p>
+        <div className="container mx-auto px-6 grid lg:grid-cols-2 gap-10 lg:gap-16 text-[#312e81]/75 leading-relaxed text-lg">
+          <p>La création est au cœur de l&apos;Atelier Kairos. Elle n&apos;est pas seulement une production extérieure, mais une <span className="text-[#312e81] font-medium">manière d&apos;entrer en relation</span> avec le vivant, avec la conscience, avec la matière et avec l&apos;être.</p>
+          <p>Cet espace présente mes créations personnelles — envisagées comme un <span className="italic text-[#4338ca]">chemin d&apos;incarnation</span>. Une manière de rendre visible l&apos;invisible, de donner forme à ce qui traverse le corps, la conscience et l&apos;imaginaire.</p>
         </div>
       </section>
 
@@ -30,17 +30,17 @@ export default function Page() {
                 <article key={c.id} className="group relative overflow-hidden rounded-3xl glass hover:glass-strong hover:-translate-y-1 transition-all duration-500">
                   {c.imageUrl && <div className="aspect-[4/5] overflow-hidden"><img src={c.imageUrl} alt={c.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" /></div>}
                   <div className="p-6">
-                    {c.subtitle && <p className="text-[10px] uppercase tracking-[0.25em] text-[#4f46e5] mb-2">{c.subtitle}</p>}
-                    <h3 className="font-serif text-2xl text-[#3730a3] leading-tight">{c.title}</h3>
-                    {c.description && <p className="mt-3 text-[14px] text-[#3730a3]/70 leading-relaxed">{c.description}</p>}
+                    {c.subtitle && <p className="text-[10px] uppercase tracking-[0.25em] text-[#4338ca] mb-2">{c.subtitle}</p>}
+                    <h3 className="font-serif text-2xl text-[#312e81] leading-tight">{c.title}</h3>
+                    {c.description && <p className="mt-3 text-[14px] text-[#312e81]/70 leading-relaxed">{c.description}</p>}
                   </div>
                 </article>
               ))}
             </div>
           ) : (
             <div className="glass-strong rounded-3xl p-12 text-center max-w-2xl mx-auto">
-              <p className="font-serif italic text-2xl text-[#3730a3]/80 leading-snug">Les premières créations seront publiées ici progressivement, au rythme de l&apos;émergence.</p>
-              <p className="mt-4 text-[#3730a3]/65">Écrivez-moi pour être tenu au courant.</p>
+              <p className="font-serif italic text-2xl text-[#312e81]/80 leading-snug">Les premières créations seront publiées ici progressivement, au rythme de l&apos;émergence.</p>
+              <p className="mt-4 text-[#312e81]/65">Écrivez-moi pour être tenu au courant.</p>
             </div>
           )}
         </div>
