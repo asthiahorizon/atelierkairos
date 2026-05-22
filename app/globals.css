@@ -4,40 +4,38 @@
 
 @layer base {
   :root {
-    --background: 210 40% 97%;
-    --foreground: 215 35% 14%;
-    --card: 0 0% 100%;
-    --card-foreground: 215 35% 14%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 215 35% 14%;
-    --primary: 215 40% 38%;
-    --primary-foreground: 210 40% 97%;
-    --secondary: 210 30% 92%;
-    --secondary-foreground: 215 35% 18%;
-    --muted: 210 25% 94%;
-    --muted-foreground: 215 15% 42%;
-    --accent: 215 35% 75%;
-    --accent-foreground: 215 35% 14%;
+    --background: 39 45% 93%;
+    --foreground: 28 25% 13%;
+    --card: 39 50% 97%;
+    --card-foreground: 28 25% 13%;
+    --popover: 39 50% 97%;
+    --popover-foreground: 28 25% 13%;
+    --primary: 217 38% 18%;
+    --primary-foreground: 39 45% 93%;
+    --secondary: 36 30% 85%;
+    --secondary-foreground: 28 25% 18%;
+    --muted: 36 25% 88%;
+    --muted-foreground: 28 12% 38%;
+    --accent: 120 12% 42%;
+    --accent-foreground: 39 50% 97%;
     --destructive: 0 70% 50%;
-    --destructive-foreground: 210 40% 97%;
-    --border: 215 18% 86%;
-    --input: 215 18% 86%;
-    --ring: 215 40% 38%;
+    --destructive-foreground: 39 50% 97%;
+    --border: 33 20% 80%;
+    --input: 33 20% 80%;
+    --ring: 217 38% 18%;
     --radius: 1rem;
-    --chart-1: 215 40% 38%;
-    --chart-2: 200 30% 50%;
-    --chart-3: 220 25% 60%;
-    --chart-4: 195 22% 55%;
-    --chart-5: 230 20% 70%;
-    --sidebar: 0 0% 100%;
-    --sidebar-foreground: 215 35% 14%;
+    --chart-1: 217 38% 18%;
+    --chart-2: 120 12% 42%;
+    --chart-3: 28 30% 55%;
+    --chart-4: 35 25% 70%;
+    --chart-5: 200 12% 50%;
+    --sidebar: 39 50% 97%;
+    --sidebar-foreground: 28 25% 13%;
   }
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
+  * { @apply border-border; }
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
@@ -52,21 +50,6 @@
 }
 
 html { scroll-behavior: smooth; }
-
-/* subtle grain overlay */
-.grain::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.06;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-}
-
-.marquee-line {
-  background: linear-gradient(90deg, transparent, rgba(61, 90, 128, 0.5), transparent);
-}
 
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(24px); }
@@ -86,7 +69,8 @@ html { scroll-behavior: smooth; }
 }
 .animate-slow-zoom { animation: slowZoom 12s ease-out forwards; }
 
-.marquee-line {
-  background: linear-gradient(90deg, transparent, rgba(168, 85, 63, 0.5), transparent);
-  height: 1px;
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.55; }
+  50% { transform: scale(1.08); opacity: 0.75; }
 }
+.animate-breathe { animation: breathe 10s ease-in-out infinite; }
