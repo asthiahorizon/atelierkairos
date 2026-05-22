@@ -4,9 +4,9 @@ export default function sitemap() {
   const lastModified = new Date();
   const routes = [
     { path: '/', priority: 1.0 },
-    { path: '/accompagnement-individuel', priority: 0.95 },
-    { path: '/entreprises', priority: 0.9 },
-    { path: '/ateliers-cercles', priority: 0.9 },
+    { path: '/accompagnement', priority: 0.95 },
+    { path: '/entreprise', priority: 0.9 },
+    { path: '/ateliers', priority: 0.9 },
     { path: '/creations', priority: 0.85 },
     { path: '/articles', priority: 0.85 },
     { path: '/contact', priority: 0.95 },
