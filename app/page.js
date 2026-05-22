@@ -199,7 +199,7 @@ export default function HomePage() {
                 <span className="text-[10px] tracking-[0.25em] uppercase text-[#312e81]">À propos</span>
               </div>
               <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.04] tracking-tight text-[#312e81]">
-                Guillaume, <span className="italic font-light text-[#4338ca]">le chemin vers ce qui soigne.</span>
+                Un parcours, <span className="italic font-light text-[#4338ca]">une présence.</span>
               </h2>
 
               <div className="mt-8 space-y-5 text-[#312e81]/78 leading-relaxed text-[17px]">

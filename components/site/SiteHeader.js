@@ -18,14 +18,8 @@ export const NAV_LINKS = [
       { href: '/ateliers', label: 'Ateliers', desc: "Cercles, journées d'exploration et de présence" },
     ],
   },
-  {
-    label: 'Univers',
-    href: '/creations',
-    children: [
-      { href: '/creations', label: 'Créations', desc: "Textes, œuvres, explorations" },
-      { href: '/articles', label: 'Articles', desc: "Réflexions et journal" },
-    ],
-  },
+  { href: '/creations', label: 'Créations' },
+  { href: '/articles', label: 'Articles' },
   { href: '/contact', label: 'Contact' },
 ];
 

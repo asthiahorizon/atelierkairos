@@ -49,8 +49,8 @@ export default function Page() {
         <div className="container mx-auto px-6">
           <SectionTitle
             kicker="Programmes & axes d'intervention"
-            title="Cinq angles"
-            italic="pour transformer."
+            title="Nos"
+            italic="programmes."
             subtitle="Les programmes proposés aux organisations — pensés comme des portes d'entrée complémentaires pour transformer le rapport au corps, à la créativité et aux fonctionnements singuliers."
           />
 
