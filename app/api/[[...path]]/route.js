@@ -240,53 +240,96 @@ export async function POST(request, { params }) {
       const prompt = String(body?.prompt || '').trim();
       if (!prompt) return NextResponse.json({ error: 'Prompt requis' }, { status: 400, headers: corsHeaders() });
 
-      try {
-        // Abort after ~50 seconds to give a clean message rather than a proxy timeout
-        const ctrl = new AbortController();
-        const tid = setTimeout(() => ctrl.abort(), 50_000);
-        // Call Emergent universal LLM gateway (OpenAI-compatible) for image generation — Gemini Nano Banana.
-        const resp = await fetch('https://integrations.emergentagent.com/llm/v1/images/generations', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${EMERGENT_LLM_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            model: 'gemini/gemini-2.5-flash-image',
-            prompt,
-            n: 1,
-            size: '1024x1024',
-          }),
-          signal: ctrl.signal,
-        }).catch((e) => { throw e; });
-        clearTimeout(tid);
-        const text = await resp.text();
-        let data; try { data = JSON.parse(text); } catch { data = { raw: text }; }
-        if (!resp.ok) {
-          console.error('Image gen error:', resp.status, text.slice(0, 600));
-          const upstreamMsg = data?.error?.message || data?.error || (typeof data?.raw === 'string' ? data.raw.slice(0, 300) : '');
-          return NextResponse.json({
-            error: `Génération refusée par le service IA (HTTP ${resp.status})`,
-            details: upstreamMsg || 'aucun détail',
-          }, { status: 502, headers: corsHeaders() });
-        }
-        const first = data?.data?.[0] || {};
-        let dataUrl = first.url || '';
-        if (!dataUrl && first.b64_json) dataUrl = `data:image/png;base64,${first.b64_json}`;
-        if (!dataUrl) return NextResponse.json({ error: 'Réponse image vide du service IA' }, { status: 502, headers: corsHeaders() });
+      // Models tried in order — if one returns 503/429/5xx, fall back to the next.
+      const MODEL_CHAIN = [
+        'gemini/gemini-2.5-flash-image',
+        'vertex_ai/gemini-2.5-flash-image',
+        'gemini/gemini-3-pro-image-preview',
+        'gpt-image-2',
+      ];
 
-        // Persist
-        const id = uuidv4();
-        const doc = { id, dataUrl, prompt, source: 'ai', createdAt: new Date().toISOString() };
-        try { const db = await getDb(); await db.collection('cms_images').insertOne(doc); } catch (e) { console.error('AI img Mongo:', e.message); }
-        const url = dataUrl.startsWith('data:') ? `/api/images/${id}` : dataUrl;
-        return NextResponse.json({ success: true, id, url }, { headers: corsHeaders() });
-      } catch (err) {
-        const isAbort = err?.name === 'AbortError';
-        return NextResponse.json({
-          error: isAbort ? 'Délai dépassé côté serveur (>50s). Réessayez avec un prompt plus simple.' : `Erreur réseau IA : ${err.message}`,
-        }, { status: 504, headers: corsHeaders() });
+      const attempts = [];
+      for (const model of MODEL_CHAIN) {
+        // Up to 2 tries per model (transient errors retry)
+        for (let tryNum = 1; tryNum <= 2; tryNum++) {
+          try {
+            const ctrl = new AbortController();
+            const tid = setTimeout(() => ctrl.abort(), 50_000);
+            // eslint-disable-next-line no-await-in-loop
+            const resp = await fetch('https://integrations.emergentagent.com/llm/v1/images/generations', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${EMERGENT_LLM_KEY}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ model, prompt, n: 1, size: '1024x1024' }),
+              signal: ctrl.signal,
+            });
+            clearTimeout(tid);
+            // eslint-disable-next-line no-await-in-loop
+            const text = await resp.text();
+            let data; try { data = JSON.parse(text); } catch { data = { raw: text }; }
+
+            if (resp.ok) {
+              const first = data?.data?.[0] || {};
+              let dataUrl = first.url || '';
+              if (!dataUrl && first.b64_json) dataUrl = `data:image/png;base64,${first.b64_json}`;
+              if (!dataUrl) {
+                attempts.push(`${model} #${tryNum}: réponse vide`);
+                continue;
+              }
+              // Persist
+              const id = uuidv4();
+              const doc = { id, dataUrl, prompt, source: 'ai', model, createdAt: new Date().toISOString() };
+              try { const db = await getDb(); await db.collection('cms_images').insertOne(doc); } catch (e) { console.error('AI img Mongo:', e.message); }
+              const url = dataUrl.startsWith('data:') ? `/api/images/${id}` : dataUrl;
+              return NextResponse.json({ success: true, id, url, model }, { headers: corsHeaders() });
+            }
+
+            // Non-OK upstream response
+            const upstreamMsg = data?.error?.message || data?.error || (typeof data?.raw === 'string' ? data.raw.slice(0, 200) : '');
+            attempts.push(`${model} #${tryNum}: HTTP ${resp.status} ${upstreamMsg}`);
+            console.error('Image gen err:', model, resp.status, upstreamMsg);
+
+            // Decide: retry / fallback / abort
+            if (resp.status === 401 || resp.status === 403) {
+              // Auth issue — no point in retrying or trying other models
+              return NextResponse.json({
+                error: `Authentification IA refusée (HTTP ${resp.status}). Vérifiez la clé EMERGENT_LLM_KEY sur Railway.`,
+                details: upstreamMsg || 'auth error',
+              }, { status: 502, headers: corsHeaders() });
+            }
+            if (resp.status === 400) {
+              // Bad request — likely prompt rejected by safety filter
+              return NextResponse.json({
+                error: 'Le service IA a refusé ce prompt (filtre de sécurité). Reformulez la description avec un vocabulaire plus neutre.',
+                details: upstreamMsg,
+              }, { status: 422, headers: corsHeaders() });
+            }
+            // 429 / 5xx → wait briefly then retry / fallback
+            if (tryNum === 1 && (resp.status === 503 || resp.status === 429 || resp.status >= 500)) {
+              // eslint-disable-next-line no-await-in-loop
+              await new Promise((r) => setTimeout(r, 800 + Math.random() * 800));
+              continue; // retry same model
+            }
+            // Otherwise break out and try next model
+            break;
+          } catch (err) {
+            const isAbort = err?.name === 'AbortError';
+            attempts.push(`${model} #${tryNum}: ${isAbort ? 'timeout' : err.message}`);
+            if (tryNum === 2) break; // give up this model
+            // brief pause before retry
+            // eslint-disable-next-line no-await-in-loop
+            await new Promise((r) => setTimeout(r, 500));
+          }
+        }
       }
+
+      console.error('All image gen attempts failed:', attempts);
+      return NextResponse.json({
+        error: 'Le service IA est temporairement indisponible (tous les modèles ont échoué). Réessayez dans quelques minutes.',
+        details: attempts.join(' | '),
+      }, { status: 503, headers: corsHeaders() });
     }
 
     // Newsletter subscribe: POST /api/newsletter/subscribe
