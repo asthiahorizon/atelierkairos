@@ -237,11 +237,62 @@ export async function POST(request, { params }) {
         }, { status: 500, headers: corsHeaders() });
       }
       const body = await request.json();
-      const prompt = String(body?.prompt || '').trim();
-      if (!prompt) return NextResponse.json({ error: 'Prompt requis' }, { status: 400, headers: corsHeaders() });
+      const userPrompt = String(body?.prompt || '').trim();
+      if (!userPrompt) return NextResponse.json({ error: 'Prompt requis' }, { status: 400, headers: corsHeaders() });
 
-      // Models tried in order — if one returns 503/429/5xx, fall back to the next.
-      // OpenAI gpt-image-2 placed first for reliability; Gemini variants as fallback.
+      // STEP 1 — Rewrite user theme into a safe, abstract artistic image description.
+      // This avoids triggering safety filters on therapy/wellness vocabulary.
+      let safePrompt = userPrompt; // fallback if rewriter fails
+      try {
+        const sysPrompt = [
+          "You are an artistic prompt rewriter for a peaceful, wellness-oriented brand named Atelier Kairos.",
+          "The user gives you a French theme often related to therapy, body-mind work, neurodiversity, or wellness.",
+          "Your job: produce ONE beautiful, abstract, symbolic image description in English.",
+          "Strictly remove all clinical, medical, therapy, mental-health, trauma, neurological, or diagnostic vocabulary.",
+          "Replace it with poetic nature/light/movement/element metaphors (water, light, threads, mist, stones, breath, dawn, geometry, flowers, fabric, silk, rivers, mountains).",
+          "Style: soft watercolor, editorial illustration, minimalist, no human figures, no faces, no text, no logos.",
+          "Palette: deep indigo and violet on off-white / cream, calm and contemplative.",
+          "Composition: balanced, square 1:1 format, suitable for an editorial cover.",
+          "Length: maximum 55 words. Output ONLY the image description — no preamble, no quotes, no explanations.",
+        ].join(' ');
+
+        const ctrl1 = new AbortController();
+        const tid1 = setTimeout(() => ctrl1.abort(), 15_000);
+        const rwResp = await fetch('https://integrations.emergentagent.com/llm/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${EMERGENT_LLM_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'gpt-5.2',
+            messages: [
+              { role: 'system', content: sysPrompt },
+              { role: 'user', content: userPrompt },
+            ],
+            temperature: 0.7,
+            max_tokens: 200,
+          }),
+          signal: ctrl1.signal,
+        });
+        clearTimeout(tid1);
+        if (rwResp.ok) {
+          const rwData = await rwResp.json();
+          const rewritten = String(rwData?.choices?.[0]?.message?.content || '').trim();
+          if (rewritten && rewritten.length > 10) {
+            safePrompt = rewritten;
+            console.log('Sanitized prompt:', rewritten.slice(0, 160));
+          }
+        } else {
+          const errTxt = await rwResp.text();
+          console.warn('Prompt rewriter failed:', rwResp.status, errTxt.slice(0, 200));
+        }
+      } catch (e) {
+        console.warn('Prompt rewriter error:', e.message);
+      }
+
+      // STEP 2 — Generate image with the sanitized prompt.
+      // Models tried in order — gpt-image-2 first (user preference), Gemini as fallback.
       const MODEL_CHAIN = [
         'gpt-image-2',
         'gemini/gemini-2.5-flash-image',
@@ -251,7 +302,6 @@ export async function POST(request, { params }) {
 
       const attempts = [];
       for (const model of MODEL_CHAIN) {
-        // Up to 2 tries per model (transient errors retry)
         for (let tryNum = 1; tryNum <= 2; tryNum++) {
           try {
             const ctrl = new AbortController();
@@ -263,7 +313,7 @@ export async function POST(request, { params }) {
                 'Authorization': `Bearer ${EMERGENT_LLM_KEY}`,
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify({ model, prompt, n: 1, size: '1024x1024' }),
+              body: JSON.stringify({ model, prompt: safePrompt, n: 1, size: '1024x1024' }),
               signal: ctrl.signal,
             });
             clearTimeout(tid);
@@ -279,47 +329,34 @@ export async function POST(request, { params }) {
                 attempts.push(`${model} #${tryNum}: réponse vide`);
                 continue;
               }
-              // Persist
               const id = uuidv4();
-              const doc = { id, dataUrl, prompt, source: 'ai', model, createdAt: new Date().toISOString() };
+              const doc = { id, dataUrl, prompt: safePrompt, originalPrompt: userPrompt, source: 'ai', model, createdAt: new Date().toISOString() };
               try { const db = await getDb(); await db.collection('cms_images').insertOne(doc); } catch (e) { console.error('AI img Mongo:', e.message); }
               const url = dataUrl.startsWith('data:') ? `/api/images/${id}` : dataUrl;
-              return NextResponse.json({ success: true, id, url, model }, { headers: corsHeaders() });
+              return NextResponse.json({ success: true, id, url, model, safePrompt }, { headers: corsHeaders() });
             }
 
-            // Non-OK upstream response
             const upstreamMsg = data?.error?.message || data?.error || (typeof data?.raw === 'string' ? data.raw.slice(0, 200) : '');
             attempts.push(`${model} #${tryNum}: HTTP ${resp.status} ${upstreamMsg}`);
             console.error('Image gen err:', model, resp.status, upstreamMsg);
 
-            // Decide: retry / fallback / abort
             if (resp.status === 401 || resp.status === 403) {
-              // Auth issue — no point in retrying or trying other models
               return NextResponse.json({
                 error: `Authentification IA refusée (HTTP ${resp.status}). Vérifiez la clé EMERGENT_LLM_KEY sur Railway.`,
                 details: upstreamMsg || 'auth error',
               }, { status: 502, headers: corsHeaders() });
             }
-            if (resp.status === 400) {
-              // Bad request — likely prompt rejected by safety filter
-              return NextResponse.json({
-                error: 'Le service IA a refusé ce prompt (filtre de sécurité). Reformulez la description avec un vocabulaire plus neutre.',
-                details: upstreamMsg,
-              }, { status: 422, headers: corsHeaders() });
-            }
-            // 429 / 5xx → wait briefly then retry / fallback
+            if (resp.status === 400) { break; }
             if (tryNum === 1 && (resp.status === 503 || resp.status === 429 || resp.status >= 500)) {
               // eslint-disable-next-line no-await-in-loop
               await new Promise((r) => setTimeout(r, 800 + Math.random() * 800));
-              continue; // retry same model
+              continue;
             }
-            // Otherwise break out and try next model
             break;
           } catch (err) {
             const isAbort = err?.name === 'AbortError';
             attempts.push(`${model} #${tryNum}: ${isAbort ? 'timeout' : err.message}`);
-            if (tryNum === 2) break; // give up this model
-            // brief pause before retry
+            if (tryNum === 2) break;
             // eslint-disable-next-line no-await-in-loop
             await new Promise((r) => setTimeout(r, 500));
           }
@@ -327,9 +364,13 @@ export async function POST(request, { params }) {
       }
 
       console.error('All image gen attempts failed:', attempts);
+      const allSafetyRejected = attempts.every((a) => a.includes('HTTP 400'));
       return NextResponse.json({
-        error: 'Le service IA est temporairement indisponible (tous les modèles ont échoué). Réessayez dans quelques minutes.',
+        error: allSafetyRejected
+          ? "Le prompt est encore jugé sensible par tous les services IA. Personnalisez le prompt manuellement avec des mots plus neutres."
+          : 'Le service IA est temporairement indisponible. Réessayez dans quelques minutes.',
         details: attempts.join(' | '),
+        safePrompt,
       }, { status: 503, headers: corsHeaders() });
     }
 

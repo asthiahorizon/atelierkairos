@@ -50,6 +50,7 @@ const EMPTY = {
   tags: '',
   published: true,
   order: 0,
+  aiPrompt: '',
 };
 
 export default function AdminPage() {
@@ -249,8 +250,10 @@ export default function AdminPage() {
 
   async function generateGalleryAI() {
     const seed = form.description?.trim() || form.title?.trim();
-    if (!seed) { toast.error("Renseignez d'abord un titre ou une description"); return; }
-    const aiPrompt = `Image éditoriale complémentaire pour une galerie, en cohérence avec : « ${seed} ». Variation artistique, abstraite ou symbolique, palette violet/indigo foncé sur blanc cassé, sans texte, format carré.`;
+    if (!seed && !form.aiPrompt?.trim()) { toast.error("Renseignez un titre, une description ou un prompt personnalisé"); return; }
+    const aiPrompt = form.aiPrompt?.trim()
+      ? `${form.aiPrompt.trim()} — variation pour galerie, différente de la précédente.`
+      : `Image éditoriale complémentaire pour une galerie, en cohérence avec : « ${seed} ». Variation artistique, abstraite ou symbolique, palette violet/indigo foncé sur blanc cassé, sans texte, format carré.`;
     setGalleryBusy(true);
     const t = toast.loading('Génération en cours (5–15 s)…');
     try {
@@ -287,11 +290,12 @@ export default function AdminPage() {
 
   async function generateAI() {
     const seed = form.description?.trim() || form.title?.trim();
-    if (!seed) {
-      toast.error('Renseignez d\u2019abord un titre ou une description');
+    if (!seed && !form.aiPrompt?.trim()) {
+      toast.error('Renseignez un titre, une description ou un prompt personnalisé');
       return;
     }
-    const aiPrompt = `Image de couverture éditoriale, élégante et moderne, sur le thème : « ${seed} ». Esthétique douce, palette violet/indigo foncé sur blanc cassé, ambiance apaisante, abstraite ou symbolique, sans texte, format carré.`;
+    const aiPrompt = form.aiPrompt?.trim()
+      || `Image de couverture éditoriale, élégante et moderne, sur le thème : « ${seed} ». Esthétique douce, palette violet/indigo foncé sur blanc cassé, ambiance apaisante, abstraite ou symbolique, sans texte, format carré.`;
     setGenerating(true);
     const t = toast.loading('Génération de l\u2019image en cours (5–15 s)…');
     try {
