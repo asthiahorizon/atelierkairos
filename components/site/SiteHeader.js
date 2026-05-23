@@ -18,7 +18,8 @@ export const NAV_LINKS = [
       { href: '/ateliers', label: 'Ateliers', desc: "Cercles, journées d'exploration et de présence" },
     ],
   },
-  { href: '/decouvrir', label: 'Découvrir' },
+  { href: '/creations', label: 'Créations' },
+  { href: '/articles', label: 'Articles' },
   { href: '/contact', label: 'Contact' },
 ];
 
@@ -60,7 +61,7 @@ export default function SiteHeader() {
 
           {/* DESKTOP NAV */}
           <nav className="hidden lg:flex items-center gap-1">
-            {NAV_LINKS.filter((n) => n.label !== 'Contact').map((n) => (
+            {NAV_LINKS.map((n) => (
               <div
                 key={n.label}
                 className="relative"
