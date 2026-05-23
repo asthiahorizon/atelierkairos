@@ -127,12 +127,19 @@ export async function GET(request, { params }) {
     }
     // Public: GET /api/entries/:type
     if (path.startsWith('entries/')) {
-      const type = path.split('/')[1];
+      const parts = path.split('/');
+      const type = parts[1];
+      const id = parts[2];
       if (!VALID_TYPES.includes(type)) {
         return NextResponse.json({ error: 'Type invalide' }, { status: 400, headers: corsHeaders() });
       }
       const db = await getDb();
       await ensureSeed(db, type);
+      if (id) {
+        const entry = await db.collection('cms_entries').findOne({ id, type, published: true }, { projection: { _id: 0 } });
+        if (!entry) return NextResponse.json({ error: 'Introuvable' }, { status: 404, headers: corsHeaders() });
+        return NextResponse.json({ entry }, { headers: corsHeaders() });
+      }
       const entries = await db.collection('cms_entries')
         .find({ type, published: true }, { projection: { _id: 0 } })
         .sort({ order: 1, createdAt: -1 })
