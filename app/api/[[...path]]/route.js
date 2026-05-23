@@ -27,6 +27,105 @@ function checkToken(token) {
 
 const VALID_TYPES = ['programmes', 'ateliers', 'creations', 'articles'];
 
+// ---------------------- IMAGE GENERATION HELPERS ----------------------
+
+async function rewritePromptForSafety(userPrompt) {
+  if (!EMERGENT_LLM_KEY) return userPrompt;
+  const sysPrompt = [
+    "You are an artistic prompt rewriter for a peaceful, wellness-oriented brand named Atelier Kairos.",
+    "The user gives you a French theme often related to therapy, body-mind work, neurodiversity, or wellness.",
+    "Your job: produce ONE beautiful, abstract, symbolic image description in English.",
+    "Strictly remove all clinical, medical, therapy, mental-health, trauma, neurological, or diagnostic vocabulary.",
+    "Replace it with poetic nature/light/movement/element metaphors (water, light, threads, mist, stones, breath, dawn, geometry, flowers, fabric, silk, rivers, mountains).",
+    "Style: soft watercolor, editorial illustration, minimalist, no human figures, no faces, no text, no logos.",
+    "Palette: deep indigo and violet on off-white / cream, calm and contemplative.",
+    "Composition: balanced, square 1:1 format, suitable for an editorial cover.",
+    "Length: maximum 55 words. Output ONLY the image description — no preamble, no quotes, no explanations.",
+  ].join(' ');
+  try {
+    const ctrl = new AbortController();
+    const tid = setTimeout(() => ctrl.abort(), 15_000);
+    const resp = await fetch('https://integrations.emergentagent.com/llm/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${EMERGENT_LLM_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'gpt-5.2',
+        messages: [{ role: 'system', content: sysPrompt }, { role: 'user', content: userPrompt }],
+        temperature: 0.7,
+        max_tokens: 200,
+      }),
+      signal: ctrl.signal,
+    });
+    clearTimeout(tid);
+    if (!resp.ok) return userPrompt;
+    const data = await resp.json();
+    const rewritten = String(data?.choices?.[0]?.message?.content || '').trim();
+    return rewritten && rewritten.length > 10 ? rewritten : userPrompt;
+  } catch {
+    return userPrompt;
+  }
+}
+
+const IMAGE_MODEL_CHAIN = [
+  'gpt-image-2',
+  'gemini/gemini-2.5-flash-image',
+  'vertex_ai/gemini-2.5-flash-image',
+  'gemini/gemini-3-pro-image-preview',
+];
+
+// Returns { ok: true, id, url, model, safePrompt } or { ok: false, error, details, status }
+async function generateOneImage({ userPrompt, db }) {
+  if (!EMERGENT_LLM_KEY) {
+    return { ok: false, status: 500, error: 'EMERGENT_LLM_KEY non définie' };
+  }
+  const safePrompt = await rewritePromptForSafety(userPrompt);
+  const attempts = [];
+  for (const model of IMAGE_MODEL_CHAIN) {
+    for (let tryNum = 1; tryNum <= 2; tryNum++) {
+      try {
+        const ctrl = new AbortController();
+        const tid = setTimeout(() => ctrl.abort(), 50_000);
+        const resp = await fetch('https://integrations.emergentagent.com/llm/v1/images/generations', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${EMERGENT_LLM_KEY}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model, prompt: safePrompt, n: 1, size: '1024x1024' }),
+          signal: ctrl.signal,
+        });
+        clearTimeout(tid);
+        const text = await resp.text();
+        let data; try { data = JSON.parse(text); } catch { data = { raw: text }; }
+        if (resp.ok) {
+          const first = data?.data?.[0] || {};
+          let dataUrl = first.url || '';
+          if (!dataUrl && first.b64_json) dataUrl = `data:image/png;base64,${first.b64_json}`;
+          if (!dataUrl) { attempts.push(`${model} #${tryNum}: vide`); continue; }
+          const id = uuidv4();
+          const doc = { id, dataUrl, prompt: safePrompt, originalPrompt: userPrompt, source: 'ai', model, createdAt: new Date().toISOString() };
+          try { await db.collection('cms_images').insertOne(doc); } catch (e) { console.error('img mongo:', e.message); }
+          const url = dataUrl.startsWith('data:') ? `/api/images/${id}` : dataUrl;
+          return { ok: true, id, url, model, safePrompt };
+        }
+        const upstreamMsg = data?.error?.message || data?.error || (typeof data?.raw === 'string' ? data.raw.slice(0, 200) : '');
+        attempts.push(`${model} #${tryNum}: HTTP ${resp.status} ${upstreamMsg}`);
+        if (resp.status === 401 || resp.status === 403) {
+          return { ok: false, status: 502, error: `Auth IA refusée (HTTP ${resp.status})`, details: upstreamMsg };
+        }
+        if (resp.status === 400) break;
+        if (tryNum === 1 && (resp.status === 503 || resp.status === 429 || resp.status >= 500)) {
+          await new Promise((r) => setTimeout(r, 800));
+          continue;
+        }
+        break;
+      } catch (err) {
+        attempts.push(`${model} #${tryNum}: ${err?.name === 'AbortError' ? 'timeout' : err.message}`);
+        if (tryNum === 2) break;
+        await new Promise((r) => setTimeout(r, 500));
+      }
+    }
+  }
+  return { ok: false, status: 503, error: 'Tous les modèles ont échoué', details: attempts.join(' | ') };
+}
+
 // Default seed content for first load (admin can edit/delete freely afterwards)
 const SEED_DATA = {
   programmes: [
@@ -231,147 +330,110 @@ export async function POST(request, { params }) {
     // AI Image generation: POST /api/admin/generate-image  { prompt: "..." }
     if (path === 'admin/generate-image') {
       if (!checkAdmin(request)) return NextResponse.json({ error: 'Non autorisé' }, { status: 401, headers: corsHeaders() });
-      if (!EMERGENT_LLM_KEY) {
-        return NextResponse.json({
-          error: 'Configuration manquante : EMERGENT_LLM_KEY non définie sur le serveur. Ajoutez-la dans les variables d\u2019environnement (Railway → Variables) et redéployez.'
-        }, { status: 500, headers: corsHeaders() });
-      }
       const body = await request.json();
       const userPrompt = String(body?.prompt || '').trim();
       if (!userPrompt) return NextResponse.json({ error: 'Prompt requis' }, { status: 400, headers: corsHeaders() });
+      const db = await getDb();
+      const r = await generateOneImage({ userPrompt, db });
+      if (r.ok) {
+        return NextResponse.json({ success: true, id: r.id, url: r.url, model: r.model, safePrompt: r.safePrompt }, { headers: corsHeaders() });
+      }
+      return NextResponse.json({ error: r.error, details: r.details }, { status: r.status || 502, headers: corsHeaders() });
+    }
 
-      // STEP 1 — Rewrite user theme into a safe, abstract artistic image description.
-      // This avoids triggering safety filters on therapy/wellness vocabulary.
-      let safePrompt = userPrompt; // fallback if rewriter fails
-      try {
-        const sysPrompt = [
-          "You are an artistic prompt rewriter for a peaceful, wellness-oriented brand named Atelier Kairos.",
-          "The user gives you a French theme often related to therapy, body-mind work, neurodiversity, or wellness.",
-          "Your job: produce ONE beautiful, abstract, symbolic image description in English.",
-          "Strictly remove all clinical, medical, therapy, mental-health, trauma, neurological, or diagnostic vocabulary.",
-          "Replace it with poetic nature/light/movement/element metaphors (water, light, threads, mist, stones, breath, dawn, geometry, flowers, fabric, silk, rivers, mountains).",
-          "Style: soft watercolor, editorial illustration, minimalist, no human figures, no faces, no text, no logos.",
-          "Palette: deep indigo and violet on off-white / cream, calm and contemplative.",
-          "Composition: balanced, square 1:1 format, suitable for an editorial cover.",
-          "Length: maximum 55 words. Output ONLY the image description — no preamble, no quotes, no explanations.",
-        ].join(' ');
+    // Streaming: POST /api/admin/auto-complete-images
+    // For each published entry with no imageUrl OR no gallery (<2 images),
+    // generate a cover and fill gallery to 2 images.
+    // Streams NDJSON progress events line by line.
+    if (path === 'admin/auto-complete-images') {
+      if (!checkAdmin(request)) return NextResponse.json({ error: 'Non autorisé' }, { status: 401, headers: corsHeaders() });
+      const db = await getDb();
+      const entries = await db.collection('cms_entries').find({}, { projection: { _id: 0 } }).sort({ type: 1, order: 1 }).toArray();
 
-        const ctrl1 = new AbortController();
-        const tid1 = setTimeout(() => ctrl1.abort(), 15_000);
-        const rwResp = await fetch('https://integrations.emergentagent.com/llm/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${EMERGENT_LLM_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            model: 'gpt-5.2',
-            messages: [
-              { role: 'system', content: sysPrompt },
-              { role: 'user', content: userPrompt },
-            ],
-            temperature: 0.7,
-            max_tokens: 200,
-          }),
-          signal: ctrl1.signal,
-        });
-        clearTimeout(tid1);
-        if (rwResp.ok) {
-          const rwData = await rwResp.json();
-          const rewritten = String(rwData?.choices?.[0]?.message?.content || '').trim();
-          if (rewritten && rewritten.length > 10) {
-            safePrompt = rewritten;
-            console.log('Sanitized prompt:', rewritten.slice(0, 160));
-          }
-        } else {
-          const errTxt = await rwResp.text();
-          console.warn('Prompt rewriter failed:', rwResp.status, errTxt.slice(0, 200));
+      // Build the task list: entries that need either a cover or a gallery completion
+      const tasks = [];
+      for (const e of entries) {
+        const needCover = !e.imageUrl;
+        const galleryCount = Array.isArray(e.gallery) ? e.gallery.length : 0;
+        const galleryMissing = Math.max(0, 2 - galleryCount);
+        if (needCover || galleryMissing > 0) {
+          tasks.push({ entry: e, needCover, galleryMissing });
         }
-      } catch (e) {
-        console.warn('Prompt rewriter error:', e.message);
       }
 
-      // STEP 2 — Generate image with the sanitized prompt.
-      // Models tried in order — gpt-image-2 first (user preference), Gemini as fallback.
-      const MODEL_CHAIN = [
-        'gpt-image-2',
-        'gemini/gemini-2.5-flash-image',
-        'vertex_ai/gemini-2.5-flash-image',
-        'gemini/gemini-3-pro-image-preview',
-      ];
+      const encoder = new TextEncoder();
+      const stream = new ReadableStream({
+        async start(controller) {
+          const send = (obj) => controller.enqueue(encoder.encode(JSON.stringify(obj) + '\n'));
+          const totalImages = tasks.reduce((s, t) => s + (t.needCover ? 1 : 0) + t.galleryMissing, 0);
+          send({ type: 'start', totalEntries: tasks.length, totalImages });
 
-      const attempts = [];
-      for (const model of MODEL_CHAIN) {
-        for (let tryNum = 1; tryNum <= 2; tryNum++) {
-          try {
-            const ctrl = new AbortController();
-            const tid = setTimeout(() => ctrl.abort(), 50_000);
-            // eslint-disable-next-line no-await-in-loop
-            const resp = await fetch('https://integrations.emergentagent.com/llm/v1/images/generations', {
-              method: 'POST',
-              headers: {
-                'Authorization': `Bearer ${EMERGENT_LLM_KEY}`,
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ model, prompt: safePrompt, n: 1, size: '1024x1024' }),
-              signal: ctrl.signal,
-            });
-            clearTimeout(tid);
-            // eslint-disable-next-line no-await-in-loop
-            const text = await resp.text();
-            let data; try { data = JSON.parse(text); } catch { data = { raw: text }; }
+          let doneImages = 0;
+          let entryIdx = 0;
+          for (const task of tasks) {
+            entryIdx += 1;
+            const { entry, needCover, galleryMissing } = task;
+            const seed = entry.description?.trim() || entry.title?.trim() || entry.type;
+            send({ type: 'entry-start', entryIdx, entryId: entry.id, entryType: entry.type, title: entry.title, needCover, galleryMissing });
 
-            if (resp.ok) {
-              const first = data?.data?.[0] || {};
-              let dataUrl = first.url || '';
-              if (!dataUrl && first.b64_json) dataUrl = `data:image/png;base64,${first.b64_json}`;
-              if (!dataUrl) {
-                attempts.push(`${model} #${tryNum}: réponse vide`);
-                continue;
+            const newImageUrl = needCover ? null : undefined;
+            const newGallery = [...(entry.gallery || [])];
+            let coverUrl = entry.imageUrl;
+
+            // 1) Cover
+            if (needCover) {
+              send({ type: 'image-start', kind: 'cover', entryId: entry.id, doneImages, totalImages });
+              const r = await generateOneImage({ userPrompt: seed, db });
+              doneImages += 1;
+              if (r.ok) {
+                coverUrl = r.url;
+                send({ type: 'image-done', kind: 'cover', entryId: entry.id, url: r.url, doneImages, totalImages });
+              } else {
+                send({ type: 'image-error', kind: 'cover', entryId: entry.id, error: r.error, details: r.details, doneImages, totalImages });
               }
-              const id = uuidv4();
-              const doc = { id, dataUrl, prompt: safePrompt, originalPrompt: userPrompt, source: 'ai', model, createdAt: new Date().toISOString() };
-              try { const db = await getDb(); await db.collection('cms_images').insertOne(doc); } catch (e) { console.error('AI img Mongo:', e.message); }
-              const url = dataUrl.startsWith('data:') ? `/api/images/${id}` : dataUrl;
-              return NextResponse.json({ success: true, id, url, model, safePrompt }, { headers: corsHeaders() });
             }
 
-            const upstreamMsg = data?.error?.message || data?.error || (typeof data?.raw === 'string' ? data.raw.slice(0, 200) : '');
-            attempts.push(`${model} #${tryNum}: HTTP ${resp.status} ${upstreamMsg}`);
-            console.error('Image gen err:', model, resp.status, upstreamMsg);
+            // 2) Gallery
+            for (let i = 0; i < galleryMissing; i += 1) {
+              send({ type: 'image-start', kind: 'gallery', entryId: entry.id, idx: i + 1, doneImages, totalImages });
+              const variationPrompt = `${seed} — variation artistique ${newGallery.length + 1} pour une galerie, différente des précédentes`;
+              const r = await generateOneImage({ userPrompt: variationPrompt, db });
+              doneImages += 1;
+              if (r.ok) {
+                newGallery.push(r.url);
+                send({ type: 'image-done', kind: 'gallery', entryId: entry.id, url: r.url, doneImages, totalImages });
+              } else {
+                send({ type: 'image-error', kind: 'gallery', entryId: entry.id, error: r.error, details: r.details, doneImages, totalImages });
+              }
+            }
 
-            if (resp.status === 401 || resp.status === 403) {
-              return NextResponse.json({
-                error: `Authentification IA refusée (HTTP ${resp.status}). Vérifiez la clé EMERGENT_LLM_KEY sur Railway.`,
-                details: upstreamMsg || 'auth error',
-              }, { status: 502, headers: corsHeaders() });
+            // 3) Persist updates
+            try {
+              const update = { updatedAt: new Date().toISOString() };
+              if (coverUrl && coverUrl !== entry.imageUrl) update.imageUrl = coverUrl;
+              if (newGallery.length !== (entry.gallery || []).length) update.gallery = newGallery;
+              if (Object.keys(update).length > 1) {
+                await db.collection('cms_entries').updateOne({ id: entry.id, type: entry.type }, { $set: update });
+              }
+              send({ type: 'entry-done', entryIdx, entryId: entry.id });
+            } catch (e) {
+              send({ type: 'entry-error', entryId: entry.id, error: e.message });
             }
-            if (resp.status === 400) { break; }
-            if (tryNum === 1 && (resp.status === 503 || resp.status === 429 || resp.status >= 500)) {
-              // eslint-disable-next-line no-await-in-loop
-              await new Promise((r) => setTimeout(r, 800 + Math.random() * 800));
-              continue;
-            }
-            break;
-          } catch (err) {
-            const isAbort = err?.name === 'AbortError';
-            attempts.push(`${model} #${tryNum}: ${isAbort ? 'timeout' : err.message}`);
-            if (tryNum === 2) break;
-            // eslint-disable-next-line no-await-in-loop
-            await new Promise((r) => setTimeout(r, 500));
           }
-        }
-      }
 
-      console.error('All image gen attempts failed:', attempts);
-      const allSafetyRejected = attempts.every((a) => a.includes('HTTP 400'));
-      return NextResponse.json({
-        error: allSafetyRejected
-          ? "Le prompt est encore jugé sensible par tous les services IA. Personnalisez le prompt manuellement avec des mots plus neutres."
-          : 'Le service IA est temporairement indisponible. Réessayez dans quelques minutes.',
-        details: attempts.join(' | '),
-        safePrompt,
-      }, { status: 503, headers: corsHeaders() });
+          send({ type: 'complete', totalEntries: tasks.length, totalImages, doneImages });
+          controller.close();
+        }
+      });
+
+      return new NextResponse(stream, {
+        headers: {
+          ...corsHeaders(),
+          'Content-Type': 'application/x-ndjson; charset=utf-8',
+          'Cache-Control': 'no-cache, no-transform',
+          'X-Accel-Buffering': 'no',
+        },
+      });
     }
 
     // Newsletter subscribe: POST /api/newsletter/subscribe

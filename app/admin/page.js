@@ -65,6 +65,8 @@ export default function AdminPage() {
   const [uploading, setUploading] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [galleryBusy, setGalleryBusy] = useState(false);
+  const [autoBusy, setAutoBusy] = useState(false);
+  const [autoProgress, setAutoProgress] = useState(null); // { current, total, currentEntry, log: [], complete }
   const fileInputRef = useRef(null);
   const galleryInputRef = useRef(null);
 
@@ -288,6 +290,72 @@ export default function AdminPage() {
     });
   }
 
+  async function autoCompleteImages() {
+    if (autoBusy) return;
+    if (!confirm("Compléter automatiquement toutes les entrées qui n'ont ni couverture ni galerie complète ? Cela peut prendre plusieurs minutes.")) return;
+    setAutoBusy(true);
+    setAutoProgress({ current: 0, total: 0, totalEntries: 0, doneEntries: 0, log: [], complete: false });
+    try {
+      const res = await fetch('/api/admin/auto-complete-images', {
+        method: 'POST',
+        headers: { 'X-Admin-Token': token },
+      });
+      if (!res.ok || !res.body) {
+        const d = await res.json().catch(() => ({}));
+        toast.error(d.error || `Erreur ${res.status}`);
+        setAutoBusy(false);
+        return;
+      }
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      while (true) {
+        // eslint-disable-next-line no-await-in-loop
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        let nl;
+        while ((nl = buffer.indexOf('\n')) >= 0) {
+          const line = buffer.slice(0, nl).trim();
+          buffer = buffer.slice(nl + 1);
+          if (!line) continue;
+          try {
+            const ev = JSON.parse(line);
+            setAutoProgress((p) => {
+              const np = { ...p };
+              if (ev.type === 'start') {
+                np.total = ev.totalImages;
+                np.totalEntries = ev.totalEntries;
+                np.current = 0;
+                np.doneEntries = 0;
+              } else if (ev.type === 'entry-start') {
+                np.currentEntry = { id: ev.entryId, title: ev.title, type: ev.entryType, idx: ev.entryIdx };
+              } else if (ev.type === 'image-done') {
+                np.current = ev.doneImages;
+              } else if (ev.type === 'image-error') {
+                np.current = ev.doneImages;
+                np.log = [...(p.log || []), `❌ ${ev.kind} — ${ev.error}`].slice(-5);
+              } else if (ev.type === 'entry-done') {
+                np.doneEntries = ev.entryIdx;
+              } else if (ev.type === 'complete') {
+                np.complete = true;
+                np.current = ev.doneImages;
+              }
+              return np;
+            });
+          } catch {
+            /* ignore non-JSON */
+          }
+        }
+      }
+      toast.success('Génération complétée');
+      loadEntries();
+    } catch (err) {
+      toast.error(err?.message || 'Erreur réseau');
+    }
+    setAutoBusy(false);
+  }
+
   async function generateAI() {
     const seed = form.description?.trim() || form.title?.trim();
     if (!seed && !form.aiPrompt?.trim()) {
@@ -394,7 +462,7 @@ export default function AdminPage() {
       </header>
 
       <div className="container mx-auto px-6 py-8">
-        <div className="flex flex-wrap gap-2 mb-8">
+        <div className="flex flex-wrap gap-2 mb-4 items-center">
           {TYPES.map((t) => (
             <button
               key={t.key}
@@ -411,7 +479,73 @@ export default function AdminPage() {
               {t.label}
             </button>
           ))}
+          <div className="ml-auto" />
+          <button
+            type="button"
+            onClick={autoCompleteImages}
+            disabled={autoBusy}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm bg-white border border-[#312e81]/20 text-[#312e81] hover:bg-[#eef0fb] transition-all disabled:opacity-60"
+            title="Génère couverture + 2 images de galerie pour toutes les entrées qui en manquent"
+          >
+            {autoBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wand2 className="w-4 h-4" />}
+            Compléter les images
+          </button>
         </div>
+
+        {/* PROGRESS BAR */}
+        {autoProgress && (
+          <div className="surface rounded-2xl p-5 mb-8">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <Wand2 className="w-4 h-4 text-[#4338ca]" />
+                <span className="text-sm text-[#312e81]">
+                  {autoProgress.complete
+                    ? 'Terminé'
+                    : autoProgress.total > 0
+                      ? `Génération en cours — ${autoProgress.current} / ${autoProgress.total} image${autoProgress.total > 1 ? 's' : ''}`
+                      : 'Préparation…'}
+                </span>
+              </div>
+              {autoProgress.complete && (
+                <button
+                  onClick={() => setAutoProgress(null)}
+                  className="text-[#312e81]/60 hover:text-[#312e81]"
+                  title="Fermer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+            <div className="relative w-full h-2.5 rounded-full bg-[#eef0fb] overflow-hidden">
+              <div
+                className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#4338ca] to-[#6d28d9] rounded-full transition-all duration-500"
+                style={{
+                  width:
+                    autoProgress.total > 0
+                      ? `${Math.min(100, Math.round((autoProgress.current / autoProgress.total) * 100))}%`
+                      : '0%',
+                }}
+              />
+            </div>
+            <div className="flex items-center justify-between mt-3 text-[12px] text-[#312e81]/70">
+              <span>
+                {autoProgress.doneEntries || 0} / {autoProgress.totalEntries || 0} contenu{(autoProgress.totalEntries || 0) > 1 ? 's' : ''} traité{(autoProgress.totalEntries || 0) > 1 ? 's' : ''}
+              </span>
+              {autoProgress.currentEntry && !autoProgress.complete && (
+                <span className="italic truncate ml-3 text-right">
+                  En cours : <span className="text-[#4338ca]">{autoProgress.currentEntry.title}</span>
+                </span>
+              )}
+            </div>
+            {(autoProgress.log || []).length > 0 && (
+              <div className="mt-3 pt-3 border-t border-[#312e81]/10 space-y-1">
+                {autoProgress.log.map((line, i) => (
+                  <p key={i} className="text-[11px] text-[#312e81]/60 font-mono">{line}</p>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         {editing ? (
           <div className="surface-strong rounded-3xl p-8 mb-8">
