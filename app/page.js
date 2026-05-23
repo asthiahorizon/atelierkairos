@@ -29,32 +29,36 @@ export default function HomePage() {
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
             <div className="lg:col-span-7 animate-fade-up opacity-0" style={{ animationDelay: '0.15s' }}>
               <p className="font-serif text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-light leading-[0.95] tracking-tight text-[#312e81] mb-5">
-                Atelier <span className="italic">Kairos</span>
+                Atelier Kairos
               </p>
               <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl leading-[1.04] tracking-tight text-[#312e81]/85 font-light">
-                Kairos, <span className="italic">le temps de l&apos;Être.</span>
+                Kairos, le temps de l&apos;Être
               </h1>
 
               <p className="mt-8 max-w-xl text-base md:text-lg text-[#312e81]/70 leading-relaxed">
                 Un espace dédié à la <span className="text-[#312e81] font-medium">régulation du système nerveux</span> et à l&apos;<span className="text-[#312e81] font-medium">expression de l&apos;élan créatif de l&apos;Être</span>. Un temps réservé pour <em>achever</em>, se <em>réguler</em>, et avancer vers une vie cohérente exprimant ce que l&apos;on Est profondément.
               </p>
 
-              <div className="mt-10 flex flex-wrap items-center gap-4">
-                <Link href="/accompagnement" className="px-7 py-4 bg-[#312e81] text-white rounded-full text-sm hover:bg-[#4338ca] transition-all flex items-center gap-2 group">
+              <div className="mt-10">
+                <Link href="/accompagnement" className="w-full sm:w-auto inline-flex justify-center items-center gap-2 px-7 py-4 bg-[#312e81] text-white rounded-full text-sm hover:bg-[#4338ca] transition-all group">
                   Découvrir l&apos;accompagnement
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
-                <Link href="/contact" className="px-7 py-4 glass-strong rounded-full text-sm text-[#312e81] hover:bg-white/75 transition-all flex items-center gap-2">
-                  Prendre rendez-vous
-                </Link>
               </div>
 
-              <div className="mt-14 flex flex-wrap items-center gap-x-6 gap-y-4 text-xs uppercase tracking-widest text-[#312e81]/55">
-                <div><p className="font-serif text-xl text-[#312e81] normal-case tracking-normal">SE</p><p className="mt-1">Somatic Experiencing</p></div>
-                <span className="w-px h-10 bg-[#312e81]/15" />
-                <div><p className="font-serif text-xl text-[#312e81] normal-case tracking-normal">TCSB</p><p className="mt-1">Cranio-Sacrée Biodynamique</p></div>
-                <span className="w-px h-10 bg-[#312e81]/15 hidden sm:block" />
-                <div className="hidden sm:block"><p className="font-serif text-xl text-[#312e81] normal-case tracking-normal">TPV</p><p className="mt-1">Théorie polyvagale</p></div>
+              <div className="mt-14 grid grid-cols-3 gap-3 sm:gap-6 max-w-md">
+                <div>
+                  <p className="font-serif text-xl text-[#312e81]">SE</p>
+                  <p className="mt-1 text-[10px] sm:text-xs uppercase tracking-widest text-[#312e81]/55 leading-tight">Somatic Experiencing</p>
+                </div>
+                <div className="border-l border-[#312e81]/15 pl-3 sm:pl-6">
+                  <p className="font-serif text-xl text-[#312e81]">TCSB</p>
+                  <p className="mt-1 text-[10px] sm:text-xs uppercase tracking-widest text-[#312e81]/55 leading-tight">Cranio-Sacrée Biodynamique</p>
+                </div>
+                <div className="border-l border-[#312e81]/15 pl-3 sm:pl-6">
+                  <p className="font-serif text-xl text-[#312e81]">TPV</p>
+                  <p className="mt-1 text-[10px] sm:text-xs uppercase tracking-widest text-[#312e81]/55 leading-tight">Théorie polyvagale</p>
+                </div>
               </div>
             </div>
 
@@ -65,7 +69,7 @@ export default function HomePage() {
                   <img src={HERO_IMG} alt="Atelier Kairos" className="w-full h-[480px] md:h-[580px] object-cover animate-slow-zoom" />
                 </div>
                 <div className="absolute -bottom-6 -left-6 glass-strong rounded-2xl p-5 max-w-[260px]">
-                  <p className="font-serif italic text-[#312e81] text-lg leading-tight">« Le moment juste, où quelque chose peut advenir. »</p>
+                  <p className="font-serif italic text-[#312e81] text-lg leading-tight">Le moment juste, où quelque chose peut advenir.</p>
                   <p className="mt-2 text-[10px] uppercase tracking-[0.25em] text-[#312e81]/55">Atelier Kairos</p>
                 </div>
               </div>
@@ -81,7 +85,7 @@ export default function HomePage() {
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mb-14">
             <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.04] tracking-tight text-[#312e81]">
-              Réguler le système nerveux,<br /><span className="italic font-light">libérer l&apos;élan créatif de l&apos;Être.</span>
+              Réguler le système nerveux,<br />libérer l&apos;élan créatif de l&apos;Être
             </h2>
           </div>
 
@@ -126,7 +130,7 @@ export default function HomePage() {
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-16">
             <div className="lg:col-span-5">
               <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl leading-[1.02] tracking-tight text-[#312e81]">
-                Kairos, <span className="italic font-light">le temps de l&apos;Être.</span>
+                Kairos, le temps de l&apos;Être
               </h2>
               <p className="mt-6 text-[#312e81]/70 leading-relaxed text-lg">
                 Kairos désigne le moment juste — un temps de qualité, où quelque chose peut advenir. Non pas parce qu&apos;on l&apos;a prévu, mais parce qu&apos;on y est pleinement présent.
@@ -185,7 +189,7 @@ export default function HomePage() {
             {/* TEXTE */}
             <div className="lg:col-span-7">
               <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.04] tracking-tight text-[#312e81]">
-                Un parcours, <span className="italic font-light">une présence.</span>
+                Un parcours, une présence
               </h2>
 
               <div className="mt-8 space-y-5 text-[#312e81]/78 leading-relaxed text-[17px]">
@@ -231,7 +235,7 @@ export default function HomePage() {
         <div className="container mx-auto px-6">
           <div className="max-w-3xl mb-14">
             <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.04] tracking-tight text-[#312e81]">
-              Cinq <span className="italic font-light">portes d&apos;entrée.</span>
+              Cinq axes
             </h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-5">
@@ -264,12 +268,12 @@ export default function HomePage() {
               <div className="absolute inset-0 p-8 md:p-16 flex flex-col justify-end text-white">
                 <div className="max-w-2xl">
                   <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.05] tracking-tight">
-                    Un équilibre <span className="italic font-light">essentiel.</span>
+                    Un équilibre essentiel
                   </h2>
                   <p className="mt-6 text-white/85 leading-relaxed">
                     Reconnaître la rigueur des connaissances de la neurobiologie et de la physiologie, et&nbsp;— en même temps&nbsp;— prendre la <span className="italic">subtilité de l&apos;Être</span> dans sa globalité&nbsp;: ce qui ne se laisse pas mesurer mais qui fait pourtant partie de l&apos;humain. Une posture qui tient les deux ensemble, sans les opposer.
                   </p>
-                  <p className="mt-5 font-serif text-xl md:text-2xl italic leading-snug">« À la fois rigoureux et sensible, concret et respectueux des nuances invisibles. »</p>
+                  <p className="mt-5 font-serif text-xl md:text-2xl italic leading-snug">À la fois rigoureux et sensible, concret et respectueux des nuances invisibles.</p>
                 </div>
               </div>
             </div>

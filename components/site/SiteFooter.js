@@ -29,9 +29,6 @@ export default function SiteFooter() {
                 <span className="font-serif text-2xl italic font-normal tracking-tight text-[#a5b4fc]">Kairos</span>
               </span>
             </Link>
-            <p className="mt-5 text-sm text-white/65 leading-relaxed max-w-sm">
-              Le moment juste, pour ce qui demande à advenir. Un espace en dehors du tumulte, dédié à l&apos;écoute du vivant et à la transformation profonde.
-            </p>
           </div>
 
           {COLS.map((col) => (
@@ -56,7 +53,6 @@ export default function SiteFooter() {
 
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/50">
           <p>© {new Date().getFullYear()} Atelier Kairos — Tous droits réservés.</p>
-          <p className="italic font-serif text-sm">« Le moment juste, pour ce qui demande à advenir. »</p>
         </div>
       </div>
     </footer>

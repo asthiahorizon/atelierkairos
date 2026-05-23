@@ -36,7 +36,7 @@ const ORIENTATIONS = [
       "Le travail intègre la régulation sensorielle, la compréhension de son profil neurologique, la mise en place de stratégies d'auto-régulation concrètes, et l'exploration de l'élan créatif singulier qui caractérise souvent ces fonctionnements. Apprendre à se rencontrer tel qu'on est, sans masque ni adaptation excessive, et à partir de là, laisser sa créativité s'exprimer.",
     ],
     indications: ['Hypersensibilité','TDAH','Haut potentiel (HPI)','Autisme','Surcharge sensorielle','Fatigue nerveuse','Sentiment d\u2019être « trop » ou « pas adapté »','Burn-out autistique','Masquage'],
-    personalNote: "Étant moi-même autiste, à haut potentiel et épileptique, ce thème occupe une place particulière dans mon accompagnement. Je sais ce que cela signifie d'habiter un système nerveux singulier, et combien il est précieux de rencontrer un espace qui ne cherche pas à nous formater.",
+    personalNote: "Faisant partie du spectre autistique, à haut potentiel et épileptique, ce thème occupe une place particulière dans mon accompagnement. Je sais ce que cela signifie d'habiter un système nerveux singulier, et combien il est précieux de rencontrer un espace qui ne cherche pas à nous formater.",
   },
   {
     icon: Waves,

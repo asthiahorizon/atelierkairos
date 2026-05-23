@@ -81,40 +81,26 @@ export default function Page() {
                       </div>
                     )}
                     <div className={`p-7 md:p-9 ${p.imageUrl ? 'md:col-span-8' : 'md:col-span-12'}`}>
-                      <div className="grid md:grid-cols-12 gap-5 items-start">
-                        <div className="md:col-span-2 flex md:flex-col items-baseline gap-3 md:gap-2">
-                          <span className="font-serif italic text-3xl md:text-4xl text-[#4338ca]/55 leading-none">
-                            {String(i + 1).padStart(2, '0')}
-                          </span>
-                          {p.subtitle && (
-                            <span className="text-[10px] uppercase tracking-[0.22em] text-[#4338ca]">
-                              {p.subtitle}
+                      <h3 className="font-serif text-2xl md:text-[26px] text-[#312e81] leading-tight tracking-tight">
+                        {p.title}
+                      </h3>
+                      {p.description && (
+                        <p className="mt-3 text-[#312e81]/75 leading-relaxed">{p.description}</p>
+                      )}
+                      {p.content && (
+                        <p className="mt-3 text-[#312e81]/65 leading-relaxed text-[15px] whitespace-pre-line">
+                          {p.content}
+                        </p>
+                      )}
+                      {p.tags?.length > 0 && (
+                        <div className="mt-5 flex flex-wrap gap-1.5">
+                          {p.tags.map((t) => (
+                            <span key={t} className="text-[11px] px-3 py-1 rounded-full tag-indigo text-[#312e81]">
+                              {t}
                             </span>
-                          )}
+                          ))}
                         </div>
-                        <div className="md:col-span-10">
-                          <h3 className="font-serif text-2xl md:text-[26px] text-[#312e81] leading-tight tracking-tight">
-                            {p.title}
-                          </h3>
-                          {p.description && (
-                            <p className="mt-3 text-[#312e81]/75 leading-relaxed">{p.description}</p>
-                          )}
-                          {p.content && (
-                            <p className="mt-3 text-[#312e81]/65 leading-relaxed text-[15px] whitespace-pre-line">
-                              {p.content}
-                            </p>
-                          )}
-                          {p.tags?.length > 0 && (
-                            <div className="mt-5 flex flex-wrap gap-1.5">
-                              {p.tags.map((t) => (
-                                <span key={t} className="text-[11px] px-3 py-1 rounded-full glass-indigo text-[#312e81]">
-                                  {t}
-                                </span>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      </div>
+                      )}
                     </div>
                   </div>
                 </article>
