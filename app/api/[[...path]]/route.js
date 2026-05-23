@@ -241,11 +241,12 @@ export async function POST(request, { params }) {
       if (!prompt) return NextResponse.json({ error: 'Prompt requis' }, { status: 400, headers: corsHeaders() });
 
       // Models tried in order — if one returns 503/429/5xx, fall back to the next.
+      // OpenAI gpt-image-2 placed first for reliability; Gemini variants as fallback.
       const MODEL_CHAIN = [
+        'gpt-image-2',
         'gemini/gemini-2.5-flash-image',
         'vertex_ai/gemini-2.5-flash-image',
         'gemini/gemini-3-pro-image-preview',
-        'gpt-image-2',
       ];
 
       const attempts = [];
