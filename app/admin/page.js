@@ -470,15 +470,22 @@ export default function AdminPage() {
                   </div>
 
                   <div className="md:col-span-1">
-                    <div className="aspect-square rounded-xl overflow-hidden border border-[#312e81]/10 bg-white flex items-center justify-center">
-                      {form.imageUrl ? (
+                    <div className="aspect-square rounded-xl overflow-hidden border border-[#312e81]/10 bg-white flex items-center justify-center relative">
+                      {generating && (
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#eef0fb] to-[#dde1f5] flex flex-col items-center justify-center gap-3 z-10">
+                          <Loader2 className="w-8 h-8 text-[#4338ca] animate-spin" />
+                          <p className="text-[11px] text-[#312e81]/70 uppercase tracking-widest">Création en cours…</p>
+                          <p className="text-[10px] text-[#312e81]/50 px-3 text-center">~5 à 15 secondes</p>
+                        </div>
+                      )}
+                      {form.imageUrl && !generating ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img src={form.imageUrl} alt="aperçu" className="w-full h-full object-cover" />
-                      ) : (
+                      ) : !generating ? (
                         <div className="text-[#312e81]/40 text-xs text-center px-3">
                           Aucune image
                         </div>
-                      )}
+                      ) : null}
                     </div>
                   </div>
                 </div>
