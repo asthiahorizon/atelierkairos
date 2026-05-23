@@ -35,8 +35,8 @@ export default function Page() {
       <PageHero
         kicker="Espace de transmission"
         title="Articles"
-        italic="& réflexions."
-        subtitle="Réflexions autour du corps, de la conscience, de la créativité, du système nerveux et de la neurodivergence."
+        italic="& réflexions"
+        subtitle="Réflexions autour du corps, de la conscience, de la créativité, du système nerveux et de la neurodivergence"
       />
 
       <section className="py-12 md:py-20">
@@ -125,8 +125,8 @@ export default function Page() {
       </section>
 
       <CTASection
-        title="Être averti des prochaines publications."
-        subtitle="Écrivez-moi pour rester en lien et recevoir les nouveaux articles dès leur parution."
+        title="Être averti des prochaines publications"
+        subtitle="Écrivez-moi pour rester en lien et recevoir les nouveaux articles dès leur parution"
         buttonLabel="Me contacter"
       />
       <SiteFooter />

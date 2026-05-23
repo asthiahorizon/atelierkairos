@@ -34,8 +34,8 @@ export default function Page() {
       <PageHero
         kicker="Univers créatif"
         title="Créations"
-        italic="& explorations."
-        subtitle="Un espace où mes explorations prennent forme à travers les textes, les objets, les images, les projets et les matières."
+        italic="& explorations"
+        subtitle="Un espace où mes explorations prennent forme à travers les textes, les objets, les images, les projets et les matières"
       />
 
       <section className="py-12 md:py-20">
@@ -117,7 +117,7 @@ export default function Page() {
 
       <CTASection
         title="Curieux de suivre ces explorations ?"
-        subtitle="Écrivez-moi pour être tenu au courant des nouvelles créations et publications."
+        subtitle="Écrivez-moi pour être tenu au courant des nouvelles créations et publications"
         buttonLabel="Rester en lien"
       />
       <SiteFooter />

@@ -63,12 +63,12 @@ export default function Page() {
   return (
     <main className="min-h-screen bg-[#f5f4f8]">
       <SiteHeader />
-      <PageHero kicker="L'espace individuel" title="Accompagnement" italic="psycho-corporel." subtitle="Un espace pour réguler le système nerveux, traverser ce qui demande à l'être, et laisser émerger une expression plus juste de Soi." />
+      <PageHero kicker="L'espace individuel" title="Accompagnement" italic="psycho-corporel" subtitle="Un espace pour réguler le système nerveux, traverser ce qui demande à l'être, et laisser émerger une expression plus juste de Soi" />
 
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-6 grid lg:grid-cols-12 gap-10 lg:gap-16">
           <div className="lg:col-span-5">
-            <SectionTitle kicker="L'approche" title="Une approche" italic="psycho-corporelle." />
+            <SectionTitle kicker="L'approche" title="Une approche" italic="psycho-corporelle" />
           </div>
           <div className="lg:col-span-7 space-y-5 text-[#312e81]/75 leading-relaxed text-lg">
             <p>Mon accompagnement s&apos;appuie sur une approche psycho-corporelle — <span className="text-[#312e81] font-medium">point d&apos;entrée privilégié, qui reste fluide et intégrative.</span></p>
@@ -80,7 +80,7 @@ export default function Page() {
       <section className="py-16 md:py-24 relative overflow-hidden">
         <div className="absolute -left-32 top-1/3 w-[400px] h-[400px] rounded-full bg-[#a78bfa]/15 blur-3xl -z-10" />
         <div className="container mx-auto px-6">
-          <SectionTitle kicker="Les méthodes" title="Méthodes" italic="pratiquées." subtitle="Trois approches complémentaires, intégrées de manière fluide et adaptées à votre rythme." />
+          <SectionTitle kicker="Les méthodes" title="Méthodes" italic="pratiquées" subtitle="Trois approches complémentaires, intégrées de manière fluide et adaptées à votre rythme" />
           <div className="grid md:grid-cols-3 gap-5">
             {METHODS.map((m) => (
               <article key={m.name} className="group glass rounded-3xl p-8 hover:glass-strong hover:-translate-y-1 transition-all duration-500">
@@ -101,7 +101,7 @@ export default function Page() {
       <section className="py-20 md:py-28 relative overflow-hidden">
         <div className="absolute -right-32 top-1/4 w-[500px] h-[500px] rounded-full bg-[#818cf8]/15 blur-3xl -z-10" />
         <div className="container mx-auto px-6">
-          <SectionTitle kicker="Les orientations" title="Orientations" italic="d'accompagnement." subtitle="Trois axes complémentaires, conçus pour répondre à des besoins spécifiques tout en s'appuyant sur la même approche psycho-corporelle." />
+          <SectionTitle kicker="Les orientations" title="Orientations" italic="d'accompagnement" subtitle="Trois axes complémentaires, conçus pour répondre à des besoins spécifiques tout en s'appuyant sur la même approche psycho-corporelle" />
           <div className="space-y-6">
             {ORIENTATIONS.map((o) => (
               <article key={o.title} className="group glass rounded-[2rem] overflow-hidden hover:glass-strong transition-all duration-500">
@@ -142,7 +142,7 @@ export default function Page() {
 
       <section className="py-20 md:py-28">
         <div className="container mx-auto px-6">
-          <SectionTitle kicker="Pour qui ?" title="Les thèmes" italic="principaux." subtitle="Un espace pour celles et ceux qui sentent l'appel d'un changement profond — quelle qu'en soit la forme." />
+          <SectionTitle kicker="Pour qui ?" title="Les thèmes" italic="principaux" subtitle="Un espace pour celles et ceux qui sentent l'appel d'un changement profond — quelle qu'en soit la forme" />
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {INDICATIONS.map((ind, i) => (
               <div key={ind.title} className="group glass rounded-3xl p-8 hover:glass-strong transition-all duration-500">
@@ -165,7 +165,7 @@ export default function Page() {
         <div className="container mx-auto px-6">
           <div className="max-w-3xl mx-auto text-center mb-14">
             <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.04] tracking-tight text-[#312e81]">
-              Une <span className="italic font-light">tarification</span> juste et accessible.
+              Une tarification juste et accessible
             </h2>
           </div>
           <div className="grid md:grid-cols-2 gap-5 max-w-5xl mx-auto">
@@ -192,7 +192,7 @@ export default function Page() {
         </div>
       </section>
 
-      <CTASection title="Réserver un premier rendez-vous." subtitle="Un échange pour faire connaissance et voir si cet accompagnement répond à ce qui se cherche en vous." buttonLabel="Écrire un message" />
+      <CTASection title="Réserver un premier rendez-vous" subtitle="Un échange pour faire connaissance et voir si cet accompagnement répond à ce qui se cherche en vous" buttonLabel="Écrire un message" />
       <SiteFooter />
     </main>
   );

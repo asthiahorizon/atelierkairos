@@ -15,7 +15,7 @@ export default function Page() {
   return (
     <main className="min-h-screen bg-[#f5f4f8]">
       <SiteHeader />
-      <PageHero kicker="Espaces collectifs" title="Ateliers" italic="& cercles." subtitle="Des espaces collectifs pour ressentir, réguler, créer et partager depuis un lieu plus authentique." />
+      <PageHero kicker="Espaces collectifs" title="Ateliers" italic="& cercles" subtitle="Des espaces collectifs pour ressentir, réguler, créer et partager depuis un lieu plus authentique" />
 
       <section className="py-12 md:py-20">
         <div className="container mx-auto px-6 grid lg:grid-cols-12 gap-12">
@@ -60,7 +60,7 @@ export default function Page() {
         </div>
       </section>
 
-      <CTASection title="Connaître les prochains ateliers." subtitle="Écrivez-moi pour être tenu au courant du programme et des cercles à venir." buttonLabel="Me contacter" />
+      <CTASection title="Connaître les prochains ateliers" subtitle="Écrivez-moi pour être tenu au courant du programme et des cercles à venir" buttonLabel="Me contacter" />
       <SiteFooter />
     </main>
   );

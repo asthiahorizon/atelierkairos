@@ -6,7 +6,7 @@ export function PageHero({ kicker, title, italic, subtitle }) {
     <section className="relative pt-32 pb-14 md:pt-40 md:pb-20">
       <div className="container mx-auto px-6 relative">
         <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl xl:text-[88px] leading-[1.05] tracking-tight max-w-5xl text-balance text-[#312e81]">
-          {title}{italic ? <> <span className="italic font-light">{italic}</span></> : null}
+          {title}{italic ? ` ${italic}` : ''}
         </h1>
         {subtitle && (
           <p className="mt-8 max-w-2xl text-lg md:text-xl text-[#312e81]/70 leading-relaxed">{subtitle}</p>
@@ -45,7 +45,7 @@ export function SectionTitle({ kicker, title, italic, subtitle, center }) {
   return (
     <div className={`max-w-3xl ${center ? 'mx-auto text-center' : ''} mb-12 md:mb-16`}>
       <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.05] tracking-tight text-balance text-[#312e81]">
-        {title}{italic ? <> <span className="italic font-light">{italic}</span></> : null}
+        {title}{italic ? ` ${italic}` : ''}
       </h2>
       {subtitle && <p className="mt-6 text-lg text-[#312e81]/70 leading-relaxed">{subtitle}</p>}
     </div>

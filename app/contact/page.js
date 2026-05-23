@@ -15,8 +15,8 @@ export default function ContactPage() {
       <PageHero
         kicker="Prendre contact"
         title="Écrivons"
-        italic="un premier mot."
-        subtitle="Pour un accompagnement, un atelier, une collaboration ou une simple prise de contact. Je réponds personnellement à chaque message."
+        italic="un premier mot"
+        subtitle="Pour un accompagnement, un atelier, une collaboration ou une simple prise de contact. Je réponds personnellement à chaque message"
       />
 
       <section className="py-12 md:py-20">

@@ -23,8 +23,8 @@ export default function Page() {
       <PageHero
         kicker="Pour les organisations"
         title="Entreprise,"
-        italic="créativité et neurodivergence."
-        subtitle="Accompagner les organisations à intégrer le corps, la créativité et la diversité des fonctionnements comme ressources vivantes."
+        italic="créativité et neurodivergence"
+        subtitle="Accompagner les organisations à intégrer le corps, la créativité et la diversité des fonctionnements comme ressources vivantes"
       />
 
       <section className="py-12 md:py-20">
@@ -50,8 +50,8 @@ export default function Page() {
           <SectionTitle
             kicker="Programmes & axes d'intervention"
             title="Nos"
-            italic="programmes."
-            subtitle="Les programmes proposés aux organisations — pensés comme des portes d'entrée complémentaires pour transformer le rapport au corps, à la créativité et aux fonctionnements singuliers."
+            italic="programmes"
+            subtitle="Les programmes proposés aux organisations — pensés comme des portes d'entrée complémentaires pour transformer le rapport au corps, à la créativité et aux fonctionnements singuliers"
           />
 
           {loading ? (
@@ -111,8 +111,8 @@ export default function Page() {
       </section>
 
       <CTASection
-        title="Discuter d'une intervention en entreprise."
-        subtitle="Démarrons par un échange pour cerner les besoins de votre équipe et imaginer une proposition sur-mesure."
+        title="Discuter d'une intervention en entreprise"
+        subtitle="Démarrons par un échange pour cerner les besoins de votre équipe et imaginer une proposition sur-mesure"
         buttonLabel="Prendre contact"
       />
       <SiteFooter />
