@@ -43,6 +43,40 @@
 
 html { scroll-behavior: smooth; }
 
+/* JUSTIFY TEXT — appliqué à tous les paragraphes longs dans le contenu principal,
+   hors header, footer, admin, et hors paragraphes courts (kicker, méta, etc.). */
+main p {
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+/* Mais on garde l'alignement à gauche pour les paragraphes courts / méta / centrés */
+main p.text-center,
+main p.text-right,
+main p.text-balance,
+main .no-justify p,
+main .no-justify,
+main .uppercase,
+main p.uppercase,
+main p[class*="tracking-["],
+main p[class*="text-[10px]"],
+main p[class*="text-[11px]"],
+main p[class*="text-[12px]"],
+main p.italic.font-serif,
+main p.font-serif.italic,
+main p.text-xs,
+header p, footer p,
+nav p {
+  text-align: inherit;
+  hyphens: manual;
+}
+/* Les blockquotes/citations restent en italique non justifié */
+main blockquote, main blockquote p {
+  text-align: left;
+  hyphens: manual;
+}
+
 /* MODERN SURFACES — solid, no backdrop blur */
 .glass,
 .surface {

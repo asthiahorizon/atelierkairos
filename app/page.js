@@ -71,7 +71,7 @@ export default function HomePage() {
                 </div>
                 <div className="absolute -bottom-6 -left-6 glass-strong rounded-2xl p-5 max-w-[260px]">
                   <p className="font-serif italic text-[#312e81] text-lg leading-tight">« Le moment juste, où quelque chose peut advenir. »</p>
-                  <p className="mt-2 text-[10px] uppercase tracking-[0.25em] text-[#312e81]/55">Kairos — Grèce antique</p>
+                  <p className="mt-2 text-[10px] uppercase tracking-[0.25em] text-[#312e81]/55">Atelier Kairos</p>
                 </div>
               </div>
             </div>
@@ -140,7 +140,7 @@ export default function HomePage() {
                 Kairos, <span className="italic font-light text-[#4338ca]">le temps de l&apos;Être.</span>
               </h2>
               <p className="mt-6 text-[#312e81]/70 leading-relaxed text-lg">
-                Dans la Grèce antique, Kairos désignait le moment juste — un temps de qualité, où quelque chose peut advenir. Non pas parce qu&apos;on l&apos;a prévu, mais parce qu&apos;on y est pleinement présent.
+                Kairos désigne le moment juste — un temps de qualité, où quelque chose peut advenir. Non pas parce qu&apos;on l&apos;a prévu, mais parce qu&apos;on y est pleinement présent.
               </p>
             </div>
             <div className="lg:col-span-7 space-y-5">
