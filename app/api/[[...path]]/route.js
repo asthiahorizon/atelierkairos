@@ -231,12 +231,19 @@ export async function POST(request, { params }) {
     // AI Image generation: POST /api/admin/generate-image  { prompt: "..." }
     if (path === 'admin/generate-image') {
       if (!checkAdmin(request)) return NextResponse.json({ error: 'Non autorisé' }, { status: 401, headers: corsHeaders() });
-      if (!EMERGENT_LLM_KEY) return NextResponse.json({ error: 'Clé LLM non configurée' }, { status: 500, headers: corsHeaders() });
+      if (!EMERGENT_LLM_KEY) {
+        return NextResponse.json({
+          error: 'Configuration manquante : EMERGENT_LLM_KEY non définie sur le serveur. Ajoutez-la dans les variables d\u2019environnement (Railway → Variables) et redéployez.'
+        }, { status: 500, headers: corsHeaders() });
+      }
       const body = await request.json();
       const prompt = String(body?.prompt || '').trim();
       if (!prompt) return NextResponse.json({ error: 'Prompt requis' }, { status: 400, headers: corsHeaders() });
 
       try {
+        // Abort after ~50 seconds to give a clean message rather than a proxy timeout
+        const ctrl = new AbortController();
+        const tid = setTimeout(() => ctrl.abort(), 50_000);
         // Call Emergent universal LLM gateway (OpenAI-compatible) for image generation — Gemini Nano Banana.
         const resp = await fetch('https://integrations.emergentagent.com/llm/v1/images/generations', {
           method: 'POST',
@@ -250,27 +257,35 @@ export async function POST(request, { params }) {
             n: 1,
             size: '1024x1024',
           }),
-        });
+          signal: ctrl.signal,
+        }).catch((e) => { throw e; });
+        clearTimeout(tid);
         const text = await resp.text();
         let data; try { data = JSON.parse(text); } catch { data = { raw: text }; }
         if (!resp.ok) {
-          console.error('Image gen error:', resp.status, text.slice(0, 400));
-          return NextResponse.json({ error: 'Erreur génération image', status: resp.status, details: data?.error || text.slice(0, 400) }, { status: 502, headers: corsHeaders() });
+          console.error('Image gen error:', resp.status, text.slice(0, 600));
+          const upstreamMsg = data?.error?.message || data?.error || (typeof data?.raw === 'string' ? data.raw.slice(0, 300) : '');
+          return NextResponse.json({
+            error: `Génération refusée par le service IA (HTTP ${resp.status})`,
+            details: upstreamMsg || 'aucun détail',
+          }, { status: 502, headers: corsHeaders() });
         }
         const first = data?.data?.[0] || {};
         let dataUrl = first.url || '';
         if (!dataUrl && first.b64_json) dataUrl = `data:image/png;base64,${first.b64_json}`;
-        if (!dataUrl) return NextResponse.json({ error: 'Réponse image vide', details: data }, { status: 502, headers: corsHeaders() });
+        if (!dataUrl) return NextResponse.json({ error: 'Réponse image vide du service IA' }, { status: 502, headers: corsHeaders() });
 
         // Persist
         const id = uuidv4();
         const doc = { id, dataUrl, prompt, source: 'ai', createdAt: new Date().toISOString() };
         try { const db = await getDb(); await db.collection('cms_images').insertOne(doc); } catch (e) { console.error('AI img Mongo:', e.message); }
         const url = dataUrl.startsWith('data:') ? `/api/images/${id}` : dataUrl;
-        // Don't return the massive base64 payload back to the client — it slowed down the UI.
         return NextResponse.json({ success: true, id, url }, { headers: corsHeaders() });
       } catch (err) {
-        return NextResponse.json({ error: err.message }, { status: 500, headers: corsHeaders() });
+        const isAbort = err?.name === 'AbortError';
+        return NextResponse.json({
+          error: isAbort ? 'Délai dépassé côté serveur (>50s). Réessayez avec un prompt plus simple.' : `Erreur réseau IA : ${err.message}`,
+        }, { status: 504, headers: corsHeaders() });
       }
     }
 
