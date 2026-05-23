@@ -164,6 +164,26 @@ export default async function ArticlePage({ params }) {
         </div>
       </section>
 
+      {article.gallery?.length > 0 && (
+        <section className="pb-20 md:pb-28">
+          <div className="container mx-auto px-6">
+            <div className="max-w-4xl mx-auto">
+              <p className="text-[10px] uppercase tracking-[0.22em] text-[#312e81]/50 mb-5">
+                Galerie ({article.gallery.length})
+              </p>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+                {article.gallery.map((url, i) => (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <a key={`${url}-${i}`} href={url} target="_blank" rel="noopener noreferrer" className="group block aspect-square overflow-hidden rounded-2xl border border-[#312e81]/10 bg-white">
+                    <img src={url} alt={`${article.title} ${i + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       <CTASection
         title="Continuer l'échange."
         subtitle="Cet article résonne avec ce que vous traversez ? Écrivons-nous — un mot, une question, une rencontre."

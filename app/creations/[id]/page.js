@@ -153,6 +153,26 @@ export default async function CreationPage({ params }) {
         </div>
       </section>
 
+      {creation.gallery?.length > 0 && (
+        <section className="pb-20 md:pb-28">
+          <div className="container mx-auto px-6">
+            <div className="max-w-5xl mx-auto">
+              <p className="text-[10px] uppercase tracking-[0.22em] text-[#312e81]/50 mb-5">
+                Galerie ({creation.gallery.length})
+              </p>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+                {creation.gallery.map((url, i) => (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <a key={`${url}-${i}`} href={url} target="_blank" rel="noopener noreferrer" className="group block aspect-square overflow-hidden rounded-2xl border border-[#312e81]/10 bg-white">
+                    <img src={url} alt={`${creation.title} ${i + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       <CTASection
         title="Découvrir l'atelier."
         subtitle="Si cette création vous parle, parlons-en simplement — par message, par téléphone, ou autour d'une séance."

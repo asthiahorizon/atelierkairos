@@ -28,6 +28,9 @@ import {
   Quote,
   List,
   Link as LinkIcon,
+  Images,
+  ChevronUp,
+  ChevronDown,
 } from 'lucide-react';
 
 const TYPES = [
@@ -43,6 +46,7 @@ const EMPTY = {
   description: '',
   content: '',
   imageUrl: '',
+  gallery: [],
   tags: '',
   published: true,
   order: 0,
@@ -59,7 +63,9 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [galleryBusy, setGalleryBusy] = useState(false);
   const fileInputRef = useRef(null);
+  const galleryInputRef = useRef(null);
 
   useEffect(() => {
     const t = localStorage.getItem('kairos_admin_token');
@@ -116,7 +122,11 @@ export default function AdminPage() {
     setEditing('new');
   }
   function startEdit(entry) {
-    setForm({ ...entry, tags: (entry.tags || []).join(', ') });
+    setForm({
+      ...entry,
+      tags: (entry.tags || []).join(', '),
+      gallery: Array.isArray(entry.gallery) ? entry.gallery : [],
+    });
     setEditing(entry.id);
   }
   function cancel() {
@@ -198,6 +208,81 @@ export default function AdminPage() {
     };
     reader.readAsDataURL(file);
     e.target.value = '';
+  }
+
+  async function handleGalleryFile(e) {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+    setGalleryBusy(true);
+    const t = toast.loading(`Téléversement de ${files.length} image(s)…`);
+    const newUrls = [];
+    for (const file of files) {
+      if (file.size > 6 * 1024 * 1024) {
+        toast.error(`"${file.name}" trop volumineuse (max 6Mo)`);
+        continue;
+      }
+      // eslint-disable-next-line no-await-in-loop
+      const dataUrl = await new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = () => res(r.result);
+        r.onerror = () => rej(new Error('read'));
+        r.readAsDataURL(file);
+      }).catch(() => null);
+      if (!dataUrl) continue;
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        const r = await fetch('/api/admin/upload-image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Admin-Token': token },
+          body: JSON.stringify({ dataUrl }),
+        });
+        // eslint-disable-next-line no-await-in-loop
+        const d = await r.json().catch(() => ({}));
+        if (r.ok && d.url) newUrls.push(d.url);
+      } catch { /* skip */ }
+    }
+    setForm((f) => ({ ...f, gallery: [...(f.gallery || []), ...newUrls] }));
+    toast.success(`${newUrls.length} image(s) ajoutée(s)`, { id: t });
+    setGalleryBusy(false);
+    e.target.value = '';
+  }
+
+  async function generateGalleryAI() {
+    const seed = form.description?.trim() || form.title?.trim();
+    if (!seed) { toast.error("Renseignez d'abord un titre ou une description"); return; }
+    const aiPrompt = `Image éditoriale complémentaire pour une galerie, en cohérence avec : « ${seed} ». Variation artistique, abstraite ou symbolique, palette violet/indigo foncé sur blanc cassé, sans texte, format carré.`;
+    setGalleryBusy(true);
+    const t = toast.loading('Génération en cours (5–15 s)…');
+    try {
+      const r = await fetch('/api/admin/generate-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Token': token },
+        body: JSON.stringify({ prompt: aiPrompt }),
+      });
+      const d = await r.json().catch(() => ({}));
+      if (r.ok && d.url) {
+        setForm((f) => ({ ...f, gallery: [...(f.gallery || []), d.url] }));
+        toast.success('Image ajoutée à la galerie', { id: t });
+      } else {
+        toast.error(d.error || `Erreur (${r.status})`, { id: t });
+      }
+    } catch (err) {
+      toast.error('Erreur génération', { id: t });
+    }
+    setGalleryBusy(false);
+  }
+
+  function removeFromGallery(idx) {
+    setForm((f) => ({ ...f, gallery: (f.gallery || []).filter((_, i) => i !== idx) }));
+  }
+  function moveInGallery(idx, dir) {
+    setForm((f) => {
+      const g = [...(f.gallery || [])];
+      const ni = idx + dir;
+      if (ni < 0 || ni >= g.length) return f;
+      [g[idx], g[ni]] = [g[ni], g[idx]];
+      return { ...f, gallery: g };
+    });
   }
 
   async function generateAI() {
@@ -490,6 +575,91 @@ export default function AdminPage() {
                   </div>
                 </div>
               </div>
+
+              {/* GALLERY BLOCK */}
+              <div className="rounded-2xl border border-[#312e81]/10 bg-[#fafafa] p-5">
+                <div className="flex items-center gap-2 mb-3">
+                  <Images className="w-4 h-4 text-[#4338ca]" />
+                  <Label className="m-0">Galerie d&apos;images (optionnel)</Label>
+                  <span className="text-[11px] text-[#312e81]/50">
+                    {(form.gallery || []).length} image{(form.gallery || []).length > 1 ? 's' : ''}
+                  </span>
+                </div>
+
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <input
+                    ref={galleryInputRef}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleGalleryFile}
+                    className="hidden"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => galleryInputRef.current?.click()}
+                    disabled={galleryBusy}
+                    className="rounded-full"
+                  >
+                    {galleryBusy ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
+                    Ajouter des images
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={generateGalleryAI}
+                    disabled={galleryBusy}
+                    className="rounded-full"
+                  >
+                    {galleryBusy ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Wand2 className="w-4 h-4 mr-2" />}
+                    Générer par IA
+                  </Button>
+                </div>
+
+                {(form.gallery || []).length > 0 ? (
+                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                    {(form.gallery || []).map((url, i) => (
+                      <div key={`${url}-${i}`} className="relative group aspect-square rounded-xl overflow-hidden border border-[#312e81]/10 bg-white">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={url} alt={`gal-${i}`} className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/45 transition-colors flex items-center justify-center gap-1.5 opacity-0 group-hover:opacity-100">
+                          <button
+                            type="button"
+                            onClick={() => moveInGallery(i, -1)}
+                            className="w-7 h-7 rounded-full bg-white/95 text-[#312e81] flex items-center justify-center hover:bg-white"
+                            title="Avancer"
+                          >
+                            <ChevronUp className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => moveInGallery(i, 1)}
+                            className="w-7 h-7 rounded-full bg-white/95 text-[#312e81] flex items-center justify-center hover:bg-white"
+                            title="Reculer"
+                          >
+                            <ChevronDown className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => removeFromGallery(i)}
+                            className="w-7 h-7 rounded-full bg-white/95 text-red-600 flex items-center justify-center hover:bg-white"
+                            title="Retirer"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                        <span className="absolute top-1 left-1 text-[10px] px-1.5 py-0.5 rounded bg-black/55 text-white">{i + 1}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-[12px] text-[#312e81]/50 italic">
+                    Aucune image supplémentaire. L&apos;image de couverture ci-dessus reste l&apos;image principale.
+                  </p>
+                )}
+              </div>
+
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>

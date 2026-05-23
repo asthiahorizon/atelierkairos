@@ -274,6 +274,9 @@ export async function POST(request, { params }) {
       }
     }
 
+    // Newsletter subscribe: POST /api/newsletter/subscribe
+    // (Newsletter géré par un système externe — conservé désactivé)
+
     // Admin create: POST /api/admin/entries/:type
     if (path.startsWith('admin/entries/')) {
       if (!checkAdmin(request)) return NextResponse.json({ error: 'Non autorisé' }, { status: 401, headers: corsHeaders() });
@@ -288,6 +291,7 @@ export async function POST(request, { params }) {
         description: String(body.description || '').trim(),
         content: String(body.content || '').trim(),
         imageUrl: String(body.imageUrl || '').trim(),
+        gallery: Array.isArray(body.gallery) ? body.gallery.filter((u) => typeof u === 'string' && u.trim()).map((u) => u.trim()) : [],
         tags: Array.isArray(body.tags) ? body.tags : (body.tags ? String(body.tags).split(',').map(s => s.trim()).filter(Boolean) : []),
         published: body.published !== false,
         order: Number(body.order || 0),
@@ -321,6 +325,7 @@ export async function PUT(request, { params }) {
         ...(body.description !== undefined && { description: String(body.description).trim() }),
         ...(body.content !== undefined && { content: String(body.content).trim() }),
         ...(body.imageUrl !== undefined && { imageUrl: String(body.imageUrl).trim() }),
+        ...(body.gallery !== undefined && { gallery: Array.isArray(body.gallery) ? body.gallery.filter((u) => typeof u === 'string' && u.trim()).map((u) => u.trim()) : [] }),
         ...(body.tags !== undefined && { tags: Array.isArray(body.tags) ? body.tags : String(body.tags).split(',').map(s => s.trim()).filter(Boolean) }),
         ...(body.published !== undefined && { published: !!body.published }),
         ...(body.order !== undefined && { order: Number(body.order) }),
