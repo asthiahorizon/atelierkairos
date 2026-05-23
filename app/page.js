@@ -28,16 +28,11 @@ export default function HomePage() {
         <div className="container mx-auto px-6 relative">
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
             <div className="lg:col-span-7 animate-fade-up opacity-0" style={{ animationDelay: '0.15s' }}>
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-indigo mb-8">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#4338ca] animate-pulse" />
-                <span className="text-[11px] tracking-[0.25em] uppercase text-[#312e81]">Accompagnement psycho-corporel</span>
-              </div>
-
               <p className="font-serif text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-light leading-[0.95] tracking-tight text-[#312e81] mb-5">
-                Atelier <span className="italic text-[#4338ca]">Kairos</span>
+                Atelier <span className="italic">Kairos</span>
               </p>
               <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl leading-[1.04] tracking-tight text-[#312e81]/85 font-light">
-                Kairos, <span className="italic text-[#4338ca]">le temps de l&apos;Être.</span>
+                Kairos, <span className="italic">le temps de l&apos;Être.</span>
               </h1>
 
               <p className="mt-8 max-w-xl text-base md:text-lg text-[#312e81]/70 leading-relaxed">
@@ -85,9 +80,6 @@ export default function HomePage() {
         <div className="absolute bottom-0 -left-32 w-[400px] h-[400px] bg-[#c7d2fe]/30 rounded-full blur-3xl -z-10" />
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mb-14">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-indigo mb-5">
-              <span className="text-[10px] tracking-[0.25em] uppercase text-[#312e81]">Le cœur de l&apos;atelier</span>
-            </div>
             <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.04] tracking-tight text-[#312e81]">
               Réguler le système nerveux,<br /><span className="italic font-light">libérer l&apos;élan créatif de l&apos;Être.</span>
             </h2>
@@ -133,9 +125,6 @@ export default function HomePage() {
         <div className="container mx-auto px-6">
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-16">
             <div className="lg:col-span-5">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-indigo mb-5">
-                <span className="text-[10px] tracking-[0.25em] uppercase text-[#312e81]">La philosophie</span>
-              </div>
               <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl leading-[1.02] tracking-tight text-[#312e81]">
                 Kairos, <span className="italic font-light">le temps de l&apos;Être.</span>
               </h2>
@@ -195,9 +184,6 @@ export default function HomePage() {
 
             {/* TEXTE */}
             <div className="lg:col-span-7">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full tag-indigo mb-6">
-                <span className="text-[10px] tracking-[0.25em] uppercase text-[#312e81]">À propos</span>
-              </div>
               <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.04] tracking-tight text-[#312e81]">
                 Un parcours, <span className="italic font-light">une présence.</span>
               </h2>
@@ -244,9 +230,6 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-br from-[#eef0fb] via-[#f5f4f8] to-[#f0e9ff] -z-10" />
         <div className="container mx-auto px-6">
           <div className="max-w-3xl mb-14">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-indigo mb-5">
-              <span className="text-[10px] tracking-[0.25em] uppercase text-[#312e81]">Les espaces</span>
-            </div>
             <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.04] tracking-tight text-[#312e81]">
               Cinq <span className="italic font-light">portes d&apos;entrée.</span>
             </h2>
@@ -280,9 +263,6 @@ export default function HomePage() {
               <div className="absolute inset-0 bg-gradient-to-tr from-[#312e81]/85 via-[#4338ca]/45 to-transparent" />
               <div className="absolute inset-0 p-8 md:p-16 flex flex-col justify-end text-white">
                 <div className="max-w-2xl">
-                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-dark mb-5">
-                    <span className="text-[10px] tracking-[0.25em] uppercase text-white/85">Une posture</span>
-                  </div>
                   <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.05] tracking-tight">
                     Un équilibre <span className="italic font-light">essentiel.</span>
                   </h2>
