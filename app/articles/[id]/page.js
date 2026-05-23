@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import ReactMarkdown from 'react-markdown';
 import SiteHeader from '@/components/site/SiteHeader';
 import SiteFooter from '@/components/site/SiteFooter';
 import { CTASection } from '@/components/site/Shared';
@@ -123,12 +124,39 @@ export default async function ArticlePage({ params }) {
         <div className="container mx-auto px-6">
           <div className="max-w-3xl mx-auto">
             {article.content ? (
-              <div className="text-[#312e81]/85 text-[17.5px] md:text-[18px] leading-[1.78] space-y-5">
-                {article.content.split(/\n\s*\n/).map((para, i) => (
-                  <p key={i} className="whitespace-pre-line">
-                    {para}
-                  </p>
-                ))}
+              <div className="text-[#312e81]/85 text-[17.5px] md:text-[18px] leading-[1.78] space-y-5 article-body">
+                <ReactMarkdown
+                  components={{
+                    p: ({ children }) => <p className="leading-[1.78]">{children}</p>,
+                    strong: ({ children }) => <strong className="font-semibold text-[#312e81]">{children}</strong>,
+                    em: ({ children }) => <em className="italic text-[#4338ca]">{children}</em>,
+                    h2: ({ children }) => (
+                      <h2 className="font-serif text-2xl md:text-3xl text-[#312e81] mt-10 mb-2 tracking-tight">{children}</h2>
+                    ),
+                    h3: ({ children }) => (
+                      <h3 className="font-serif text-xl md:text-2xl text-[#312e81] mt-8 mb-2 tracking-tight">{children}</h3>
+                    ),
+                    blockquote: ({ children }) => (
+                      <blockquote className="my-6 pl-5 border-l-2 border-[#4338ca]/40 font-serif italic text-xl text-[#4338ca] leading-snug">
+                        {children}
+                      </blockquote>
+                    ),
+                    ul: ({ children }) => <ul className="list-disc pl-6 space-y-2 marker:text-[#4338ca]/60">{children}</ul>,
+                    ol: ({ children }) => <ol className="list-decimal pl-6 space-y-2 marker:text-[#4338ca]/60">{children}</ol>,
+                    li: ({ children }) => <li className="leading-[1.72]">{children}</li>,
+                    a: ({ href, children }) => (
+                      <a href={href} className="text-[#4338ca] underline underline-offset-2 hover:text-[#312e81]" target="_blank" rel="noopener noreferrer">
+                        {children}
+                      </a>
+                    ),
+                    hr: () => <hr className="my-10 border-[#312e81]/15" />,
+                    code: ({ children }) => (
+                      <code className="px-1.5 py-0.5 rounded bg-[#eef0fb] text-[#312e81] text-[15px]">{children}</code>
+                    ),
+                  }}
+                >
+                  {article.content}
+                </ReactMarkdown>
               </div>
             ) : (
               <p className="text-[#312e81]/60 italic">

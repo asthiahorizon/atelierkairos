@@ -267,7 +267,8 @@ export async function POST(request, { params }) {
         const doc = { id, dataUrl, prompt, source: 'ai', createdAt: new Date().toISOString() };
         try { const db = await getDb(); await db.collection('cms_images').insertOne(doc); } catch (e) { console.error('AI img Mongo:', e.message); }
         const url = dataUrl.startsWith('data:') ? `/api/images/${id}` : dataUrl;
-        return NextResponse.json({ success: true, id, url, dataUrl }, { headers: corsHeaders() });
+        // Don't return the massive base64 payload back to the client — it slowed down the UI.
+        return NextResponse.json({ success: true, id, url }, { headers: corsHeaders() });
       } catch (err) {
         return NextResponse.json({ error: err.message }, { status: 500, headers: corsHeaders() });
       }

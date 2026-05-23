@@ -22,6 +22,12 @@ import {
   Wand2,
   ImageIcon,
   Loader2,
+  Bold,
+  Italic,
+  Heading2,
+  Quote,
+  List,
+  Link as LinkIcon,
 } from 'lucide-react';
 
 const TYPES = [
@@ -202,21 +208,26 @@ export default function AdminPage() {
     }
     const aiPrompt = `Image de couverture éditoriale, élégante et moderne, sur le thème : « ${seed} ». Esthétique douce, palette violet/indigo foncé sur blanc cassé, ambiance apaisante, abstraite ou symbolique, sans texte, format carré.`;
     setGenerating(true);
+    const t = toast.loading('Génération de l\u2019image en cours (5–15 s)…');
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 90_000);
       const res = await fetch('/api/admin/generate-image', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-Admin-Token': token },
         body: JSON.stringify({ prompt: aiPrompt }),
+        signal: controller.signal,
       });
-      const d = await res.json();
+      clearTimeout(timeoutId);
+      const d = await res.json().catch(() => ({}));
       if (res.ok && d.url) {
         setForm((f) => ({ ...f, imageUrl: d.url }));
-        toast.success('Image générée');
+        toast.success('Image générée', { id: t });
       } else {
-        toast.error(d.error || 'Erreur génération');
+        toast.error(d.error || `Erreur génération (${res.status})`, { id: t });
       }
     } catch (err) {
-      toast.error('Erreur génération');
+      toast.error(err?.name === 'AbortError' ? 'Délai dépassé — réessayez' : 'Erreur génération', { id: t });
     }
     setGenerating(false);
   }
@@ -357,13 +368,39 @@ export default function AdminPage() {
               </div>
 
               <div>
-                <Label>Contenu détaillé (optionnel)</Label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <Label>Contenu détaillé (optionnel)</Label>
+                  <FormatToolbar
+                    onInsert={(before, after = '') => {
+                      const ta = document.getElementById('content-textarea');
+                      if (!ta) return;
+                      const start = ta.selectionStart;
+                      const end = ta.selectionEnd;
+                      const sel = (form.content || '').slice(start, end) || (after ? '' : 'texte');
+                      const newVal =
+                        (form.content || '').slice(0, start) +
+                        before + sel + after +
+                        (form.content || '').slice(end);
+                      setForm({ ...form, content: newVal });
+                      setTimeout(() => {
+                        ta.focus();
+                        const pos = start + before.length + sel.length;
+                        ta.setSelectionRange(pos, pos);
+                      }, 0);
+                    }}
+                  />
+                </div>
                 <Textarea
+                  id="content-textarea"
                   value={form.content}
                   onChange={(e) => setForm({ ...form, content: e.target.value })}
-                  rows={6}
-                  className="mt-1"
+                  rows={10}
+                  className="mt-1 font-mono text-[14px]"
+                  placeholder={"Tapez votre article ici…\n\nVous pouvez utiliser :\n**gras**, *italique*, > citation,\n## Titre de section,\n- liste à puces"}
                 />
+                <p className="text-[11px] text-[#312e81]/55 mt-1.5">
+                  Mise en forme&nbsp;: <strong className="text-[#312e81]">**gras**</strong>, <em className="text-[#4338ca]">*italique*</em>, <code className="px-1 rounded bg-[#eef0fb]">## Titre</code>, <code className="px-1 rounded bg-[#eef0fb]">&gt; citation</code>, <code className="px-1 rounded bg-[#eef0fb]">- liste</code>
+                </p>
               </div>
 
               {/* IMAGE BLOCK */}
@@ -558,5 +595,41 @@ export default function AdminPage() {
       </div>
       <Toaster position="bottom-right" richColors />
     </main>
+  );
+}
+
+
+function FormatToolbar({ onInsert }) {
+  const Btn = ({ title, onClick, children }) => (
+    <button
+      type="button"
+      onClick={onClick}
+      title={title}
+      className="w-8 h-8 rounded-md hover:bg-[#eef0fb] text-[#312e81]/70 hover:text-[#312e81] inline-flex items-center justify-center transition-colors"
+    >
+      {children}
+    </button>
+  );
+  return (
+    <div className="inline-flex items-center gap-0.5 rounded-lg border border-[#312e81]/10 bg-white px-1 py-1">
+      <Btn title="Gras (Ctrl+B)" onClick={() => onInsert('**', '**')}>
+        <Bold className="w-3.5 h-3.5" />
+      </Btn>
+      <Btn title="Italique" onClick={() => onInsert('*', '*')}>
+        <Italic className="w-3.5 h-3.5" />
+      </Btn>
+      <Btn title="Titre de section" onClick={() => onInsert('\n## ', '\n')}>
+        <Heading2 className="w-3.5 h-3.5" />
+      </Btn>
+      <Btn title="Citation" onClick={() => onInsert('\n> ', '\n')}>
+        <Quote className="w-3.5 h-3.5" />
+      </Btn>
+      <Btn title="Liste à puces" onClick={() => onInsert('\n- ', '\n')}>
+        <List className="w-3.5 h-3.5" />
+      </Btn>
+      <Btn title="Lien" onClick={() => onInsert('[', '](https://)')}>
+        <LinkIcon className="w-3.5 h-3.5" />
+      </Btn>
+    </div>
   );
 }
