@@ -165,7 +165,7 @@ export default function Page() {
         <div className="container mx-auto px-6">
           <div className="max-w-3xl mx-auto text-center mb-14">
             <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.04] tracking-tight text-[#312e81]">
-              Une <span className="italic font-light text-[#4338ca]">tarification</span> juste et accessible.
+              Une <span className="italic font-light">tarification</span> juste et accessible.
             </h2>
           </div>
           <div className="grid md:grid-cols-2 gap-5 max-w-5xl mx-auto">

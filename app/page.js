@@ -89,7 +89,7 @@ export default function HomePage() {
               <span className="text-[10px] tracking-[0.25em] uppercase text-[#312e81]">Le cœur de l&apos;atelier</span>
             </div>
             <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.04] tracking-tight text-[#312e81]">
-              Réguler le système nerveux,<br /><span className="italic font-light text-[#4338ca]">libérer l&apos;élan créatif de l&apos;Être.</span>
+              Réguler le système nerveux,<br /><span className="italic font-light">libérer l&apos;élan créatif de l&apos;Être.</span>
             </h2>
           </div>
 
@@ -137,7 +137,7 @@ export default function HomePage() {
                 <span className="text-[10px] tracking-[0.25em] uppercase text-[#312e81]">La philosophie</span>
               </div>
               <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl leading-[1.02] tracking-tight text-[#312e81]">
-                Kairos, <span className="italic font-light text-[#4338ca]">le temps de l&apos;Être.</span>
+                Kairos, <span className="italic font-light">le temps de l&apos;Être.</span>
               </h2>
               <p className="mt-6 text-[#312e81]/70 leading-relaxed text-lg">
                 Kairos désigne le moment juste — un temps de qualité, où quelque chose peut advenir. Non pas parce qu&apos;on l&apos;a prévu, mais parce qu&apos;on y est pleinement présent.
@@ -199,7 +199,7 @@ export default function HomePage() {
                 <span className="text-[10px] tracking-[0.25em] uppercase text-[#312e81]">À propos</span>
               </div>
               <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.04] tracking-tight text-[#312e81]">
-                Un parcours, <span className="italic font-light text-[#4338ca]">une présence.</span>
+                Un parcours, <span className="italic font-light">une présence.</span>
               </h2>
 
               <div className="mt-8 space-y-5 text-[#312e81]/78 leading-relaxed text-[17px]">
@@ -248,7 +248,7 @@ export default function HomePage() {
               <span className="text-[10px] tracking-[0.25em] uppercase text-[#312e81]">Les espaces</span>
             </div>
             <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.04] tracking-tight text-[#312e81]">
-              Cinq <span className="italic font-light text-[#4338ca]">portes d&apos;entrée.</span>
+              Cinq <span className="italic font-light">portes d&apos;entrée.</span>
             </h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-5">

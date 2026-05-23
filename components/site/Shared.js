@@ -5,14 +5,8 @@ export function PageHero({ kicker, title, italic, subtitle }) {
   return (
     <section className="relative pt-32 pb-14 md:pt-40 md:pb-20">
       <div className="container mx-auto px-6 relative">
-        {kicker && (
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full tag-indigo mb-7">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#4338ca]" />
-            <span className="text-[11px] tracking-[0.25em] uppercase text-[#312e81]">{kicker}</span>
-          </div>
-        )}
-        <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl xl:text-[88px] leading-[1.02] tracking-tight max-w-5xl text-balance text-[#312e81]">
-          {title} {italic && <span className="italic font-light text-[#4338ca]">{italic}</span>}
+        <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl xl:text-[88px] leading-[1.05] tracking-tight max-w-5xl text-balance text-[#312e81]">
+          {title}{italic ? <> <span className="italic font-light">{italic}</span></> : null}
         </h1>
         {subtitle && (
           <p className="mt-8 max-w-2xl text-lg md:text-xl text-[#312e81]/70 leading-relaxed">{subtitle}</p>
@@ -28,7 +22,9 @@ export function CTASection({ title, subtitle, buttonLabel = 'Prendre contact', h
       <div className="container mx-auto px-6">
         <div className="relative overflow-hidden surface-dark rounded-[2.5rem] p-10 md:p-16 lg:p-20">
           <div className="relative max-w-3xl">
-            <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.02] tracking-tight">{title}</h2>
+            <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.05] tracking-tight text-white">
+              {title}
+            </h2>
             {subtitle && <p className="mt-6 text-lg text-white/75 leading-relaxed max-w-2xl">{subtitle}</p>}
             <Link
               href={href}
@@ -48,13 +44,8 @@ export function CTASection({ title, subtitle, buttonLabel = 'Prendre contact', h
 export function SectionTitle({ kicker, title, italic, subtitle, center }) {
   return (
     <div className={`max-w-3xl ${center ? 'mx-auto text-center' : ''} mb-12 md:mb-16`}>
-      {kicker && (
-        <div className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full tag-indigo mb-5 ${center ? 'mx-auto' : ''}`}>
-          <span className="text-[10px] tracking-[0.25em] uppercase text-[#312e81]">{kicker}</span>
-        </div>
-      )}
-      <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.02] tracking-tight text-balance text-[#312e81]">
-        {title} {italic && <span className="italic font-light text-[#4338ca]">{italic}</span>}
+      <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.05] tracking-tight text-balance text-[#312e81]">
+        {title}{italic ? <> <span className="italic font-light">{italic}</span></> : null}
       </h2>
       {subtitle && <p className="mt-6 text-lg text-[#312e81]/70 leading-relaxed">{subtitle}</p>}
     </div>
