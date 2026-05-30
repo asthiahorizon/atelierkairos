@@ -13,8 +13,7 @@ export const NAV_LINKS = [
     label: 'Accompagnement',
     href: '/accompagnement',
     children: [
-      { href: '/accompagnement', label: 'Accompagnement', desc: "Vue d'ensemble de l'approche" },
-      { href: '/accompagnement#individuel', label: 'Approche individuelle', desc: "Régulation du système nerveux, trauma, neurodiversité" },
+      { href: '/accompagnement', label: 'Approche individuelle', desc: "Régulation du système nerveux, trauma, neurodiversité" },
       { href: '/entreprise', label: 'Entreprise', desc: "Programmes et interventions en organisation" },
       { href: '/ateliers', label: 'Ateliers', desc: "Cercles, journées d'exploration et de présence" },
     ],
