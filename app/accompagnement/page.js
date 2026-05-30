@@ -49,6 +49,17 @@ const ORIENTATIONS = [
     ],
     indications: ['Tensions chroniques','Douleurs','Suites de chocs','Fatigue profonde','Troubles du sommeil','Stress','Surcharge sensorielle','Récupération','Soutien au système nerveux'],
   },
+  {
+    icon: Compass,
+    title: 'Life Design',
+    lead: "Construire sa vie comme on conçoit un projet — en partant du ressenti, pas du plan de carrière.",
+    paragraphs: [
+      "Le Life Design est une approche qui consiste à concevoir sa vie comme on conçoit un projet créatif : en explorant, en prototypant, en expérimentant — plutôt qu'en suivant un plan linéaire dicté de l'extérieur. On y travaille la clarification de ses valeurs, l'identification de ses énergies vitales, la formulation d'hypothèses sur des chemins possibles, et leur mise à l'épreuve par de petites actions concrètes. C'est une démarche itérative, ancrée dans la curiosité et l'expérience vécue.",
+      "Pendant longtemps, je ne savais pas « ce que je voulais faire ». Puis j'ai compris que cette question — héritée d'un temps carriériste où l'on devait choisir une trajectoire à 20 ans pour s'y tenir toute sa vie — n'est pas adaptée à tout le monde. Il existe des profils multipotentiels, neurodivergents, des parcours en spirale, des vies à plusieurs chapitres : pour eux, le Life Design ouvre un autre rapport au temps, à la vocation et à l'engagement.",
+      "Ce que j'apporte de spécifique, c'est une dimension psycho-corporelle : je n'aide pas seulement à réfléchir, je propose de travailler à partir du ressenti corporel — ce qui vibre, ce qui se contracte, ce qui s'ouvre quand on évoque une option. Le corps est une boussole étonnamment précise lorsqu'on apprend à l'écouter, et il révèle souvent des aspirations que le mental n'avait pas encore formulées.",
+    ],
+    indications: ['Multipotentialité','Neurodivergence','Reconversion','Quête de sens','Choix de carrière','Transition de vie','Burn-out','Vocation','Projet créatif'],
+  },
 ];
 
 const INDICATIONS = [
@@ -101,7 +112,7 @@ export default function Page() {
       <section className="py-20 md:py-28 relative overflow-hidden">
         <div className="absolute -right-32 top-1/4 w-[500px] h-[500px] rounded-full bg-[#818cf8]/15 blur-3xl -z-10" />
         <div className="container mx-auto px-6">
-          <SectionTitle kicker="Les orientations" title="Orientations" italic="d'accompagnement" subtitle="Trois axes complémentaires, conçus pour répondre à des besoins spécifiques tout en s'appuyant sur la même approche psycho-corporelle" />
+          <SectionTitle kicker="Les orientations" title="Orientations" italic="d'accompagnement" subtitle="Quatre axes complémentaires, conçus pour répondre à des besoins spécifiques tout en s'appuyant sur la même approche psycho-corporelle" />
           <div className="space-y-6">
             {ORIENTATIONS.map((o) => (
               <article key={o.title} className="group glass rounded-[2rem] overflow-hidden hover:glass-strong transition-all duration-500">
