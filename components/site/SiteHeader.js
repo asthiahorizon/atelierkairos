@@ -40,9 +40,10 @@ export default function SiteHeader() {
   useEffect(() => { setOpen(false); setHover(null); }, [pathname]);
 
   const isActive = (item) => {
+    const match = (href) => pathname === href || pathname.startsWith(href + '/') || (href.includes('#') && pathname === href.split('#')[0]);
     if (item.href === '/') return pathname === '/';
-    if (item.children) return item.children.some((c) => pathname.startsWith(c.href));
-    return pathname.startsWith(item.href);
+    if (item.children) return item.children.some((c) => match(c.href));
+    return match(item.href);
   };
 
   return (
