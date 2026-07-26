@@ -19,6 +19,8 @@ export const NAV_LINKS = [
       { href: '/ateliers', label: 'Ateliers', desc: "Cercles, journées d'exploration et de présence" },
     ],
   },
+  { href: '/creations', label: 'Créations' },
+  { href: '/articles', label: 'Articles' },
   {
     label: 'Transmettre',
     href: '/transmettre/communaute',
@@ -26,8 +28,6 @@ export const NAV_LINKS = [
       { href: '/transmettre/communaute', label: 'Communauté', desc: "Les groupes Meetup soutenus par l'Atelier" },
     ],
   },
-  { href: '/creations', label: 'Créations' },
-  { href: '/articles', label: 'Articles' },
   { href: '/contact', label: 'Contact' },
 ];
 
