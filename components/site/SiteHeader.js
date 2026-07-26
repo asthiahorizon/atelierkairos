@@ -19,6 +19,13 @@ export const NAV_LINKS = [
       { href: '/ateliers', label: 'Ateliers', desc: "Cercles, journées d'exploration et de présence" },
     ],
   },
+  {
+    label: 'Transmettre',
+    href: '/transmettre/communaute',
+    children: [
+      { href: '/transmettre/communaute', label: 'Communauté', desc: "Les groupes Meetup soutenus par l'Atelier" },
+    ],
+  },
   { href: '/creations', label: 'Créations' },
   { href: '/articles', label: 'Articles' },
   { href: '/contact', label: 'Contact' },

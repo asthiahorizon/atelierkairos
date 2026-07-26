@@ -157,6 +157,26 @@ export default function Page() {
         </div>
       </section>
 
+      {/* ASTHIA HORIZON */}
+      <section className="pb-16 md:pb-24">
+        <div className="container mx-auto px-6">
+          <div className="surface rounded-3xl p-8 md:p-10 max-w-4xl mx-auto">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-[#312e81]/55 mb-3">
+              Entité porteuse
+            </p>
+            <h3 className="font-serif text-2xl md:text-[28px] text-[#312e81] leading-tight mb-4">
+              Asthia Horizon Sàrl
+            </h3>
+            <p className="text-[#312e81]/75 leading-relaxed text-[16px]">
+              Les activités de l&apos;Atelier Kairos sont portées par la société{' '}
+              <span className="text-[#312e81] font-medium">Asthia Horizon Sàrl</span>, qui s&apos;engage à respecter et à
+              incarner l&apos;ensemble des principes de cette charte — vivant, conscience, régulation et démarche progressive
+              — dans tous les projets qu&apos;elle soutient et développe.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <CTASection
         title="Discuter d'un projet"
         subtitle="Pour un accompagnement d'entreprise, une intervention en organisation ou un projet créatif — parlons-en simplement."
