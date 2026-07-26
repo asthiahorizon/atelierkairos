@@ -9,6 +9,7 @@ import { Menu, X, ArrowUpRight, ChevronDown } from 'lucide-react';
 export const NAV_LINKS = [
   { href: '/', label: 'Accueil' },
   { href: '/#apropos', label: 'À propos' },
+  { href: '/entreprise-consciente', label: 'Entreprise consciente' },
   {
     label: 'Accompagnement',
     href: '/accompagnement',
